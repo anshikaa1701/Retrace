@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-4xl">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-[#800020] mb-4">Second-Life Recommendation</h1>
+    <p class="text-[#9A2A2A]">If your product feels too old for your primary use, let ReTrace recommend strong alternative ways to reuse it and extend its life.</p>
+  </div>
+
+  <div class="bg-[#EBF5EB] border border-[#C3E6CB] rounded-2xl p-6 sm:p-10 shadow-lg relative overflow-hidden text-center space-y-8">
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 stagger-container">
+      
+      <!-- Option 1 -->
+      <div class="bg-white rounded-xl p-6 border border-[#C3E6CB] shadow-sm flex flex-col items-center group hover:border-[#800020] transition-colors">
+        <div class="w-16 h-16 rounded-full bg-blue-50 text-[#0277BD] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+        </div>
+        <h3 class="font-bold text-[#800020] text-sm uppercase tracking-wide mb-2">Study/Basic-Use Device</h3>
+        <p class="text-xs text-gray-500 mb-4">Perfect for older laptops (4+ years). Install a lightweight OS (like ChromeOS Flex) and donate it to a student.</p>
+        <button onclick="openModal('guide-modal')" class="mt-auto px-4 py-2 bg-[#EBF5EB] text-[#800020] border border-[#C3E6CB] text-xs font-bold rounded-lg w-full hover:bg-[#800020] hover:text-white transition-colors cursor-pointer">View Guide</button>
+      </div>
+
+      <!-- Option 2 -->
+      <div class="bg-white rounded-xl p-6 border border-[#C3E6CB] shadow-sm flex flex-col items-center group hover:border-[#800020] transition-colors">
+        <div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+        </div>
+        <h3 class="font-bold text-[#800020] text-sm uppercase tracking-wide mb-2">Secondary / Backup Device</h3>
+        <p class="text-xs text-gray-500 mb-4">Old phones can serve as dedicated smart home controllers, dash cams, or emergency backups.</p>
+        <button onclick="openModal('ideas-modal')" class="mt-auto px-4 py-2 bg-[#EBF5EB] text-[#800020] border border-[#C3E6CB] text-xs font-bold rounded-lg w-full hover:bg-[#800020] hover:text-white transition-colors cursor-pointer">Setup Ideas</button>
+      </div>
+
+      <!-- Option 3 -->
+      <div class="bg-white rounded-xl p-6 border border-[#C3E6CB] shadow-sm flex flex-col items-center group hover:border-[#800020] transition-colors">
+        <div class="w-16 h-16 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+        </div>
+        <h3 class="font-bold text-[#800020] text-sm uppercase tracking-wide mb-2">Usable Component Recovery</h3>
+        <p class="text-xs text-gray-500 mb-4">If entirely broken, the logic board and casing can be recovered for parts by certified facilities.</p>
+        <a href="/recovery" class="mt-auto px-4 py-2 bg-[#EBF5EB] text-[#800020] border border-[#C3E6CB] text-xs font-bold rounded-lg w-full text-center hover:bg-[#800020] hover:text-white transition-colors cursor-pointer inline-block">Find Recycler</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Modals -->
+<div id="guide-modal" class="fixed inset-0 hidden items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300" style="z-index: 9999; background-color: rgba(0,0,0,0.6);" onclick="if(event.target===this) closeModal('guide-modal')">
+  <div class="bg-[#FFF9E6] border border-[#C3E6CB] rounded-2xl w-full max-w-lg p-6 shadow-2xl transform scale-95 transition-transform duration-300">
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="text-xl font-bold text-[#800020]">ChromeOS Flex Guide</h2>
+      <button onclick="closeModal('guide-modal')" class="text-[#9A2A2A] hover:text-[#800020] text-2xl font-bold">&times;</button>
+    </div>
+    <div class="text-left text-sm text-gray-700 space-y-4">
+      <p class="text-gray-800">Transform your old PC or Mac into a fast, secure device for students.</p>
+      <ol class="list-decimal pl-5 space-y-3 text-[#9A2A2A]">
+        <li><strong class="text-[#800020]">Get a USB flash drive</strong> (8GB or more).</li>
+        <li><strong class="text-[#800020]">Install the Utility:</strong> Download the Chromebook Recovery Utility extension in Google Chrome.</li>
+        <li><strong class="text-[#800020]">Create Media:</strong> Launch the utility and follow steps to create the installation media.</li>
+        <li><strong class="text-[#800020]">Boot Device:</strong> Plug the USB into your old device and boot from the USB drive.</li>
+        <li><strong class="text-[#800020]">Install:</strong> Follow the on-screen prompts to install ChromeOS Flex!</li>
+      </ol>
+      <div class="p-3 mt-4 bg-[#EBF5EB] border border-[#C3E6CB] rounded-lg">
+        <p class="font-semibold text-[#800020]">Impact:</p>
+        <p class="text-xs text-[#9A2A2A] mt-1">Doing this extends the device lifespan by up to 5 years and prevents immediate e-waste.</p>
+      </div>
+    </div>
+    <button onclick="closeModal('guide-modal')" class="mt-6 w-full py-3 bg-[#800020] font-bold text-white rounded-xl hover:bg-[#600018] shadow-md transition-colors">Understood, Close Guide</button>
+  </div>
+</div>
+
+<div id="ideas-modal" class="fixed inset-0 hidden items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300" style="z-index: 9999; background-color: rgba(0,0,0,0.6);" onclick="if(event.target===this) closeModal('ideas-modal')">
+  <div class="bg-[#FFF9E6] border border-[#C3E6CB] rounded-2xl w-full max-w-lg p-6 shadow-2xl transform scale-95 transition-transform duration-300">
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="text-xl font-bold text-[#800020]">Backup Device Setup Ideas</h2>
+      <button onclick="closeModal('ideas-modal')" class="text-[#9A2A2A] hover:text-[#800020] text-2xl font-bold">&times;</button>
+    </div>
+    <div class="text-left text-sm text-gray-700 space-y-4">
+      <div class="p-4 bg-white rounded-xl border border-[#C3E6CB] shadow-sm hover:border-[#800020] transition-colors">
+        <h4 class="font-bold text-[#800020] mb-1">1. Smart Home Hub</h4>
+        <p class="text-[#9A2A2A] text-xs">Install apps like Google Home or Apple HomeKit. Mount it on a wall or leave it permanently plugged in the living room as a family controller.</p>
+      </div>
+      <div class="p-4 bg-white rounded-xl border border-[#C3E6CB] shadow-sm hover:border-[#800020] transition-colors">
+        <h4 class="font-bold text-[#800020] mb-1">2. Dedicated Dash Cam</h4>
+        <p class="text-[#9A2A2A] text-xs">Use an app like AutoBoy Dash Cam. Mount it in your car to loop-record your drives automatically. No internet needed!</p>
+      </div>
+      <div class="p-4 bg-white rounded-xl border border-[#C3E6CB] shadow-sm hover:border-[#800020] transition-colors">
+        <h4 class="font-bold text-[#800020] mb-1">3. Offline GPS & Media Player</h4>
+        <p class="text-[#9A2A2A] text-xs">Download Google Maps for offline use and load it up with Spotify playlists for road trips without draining your main phone's battery.</p>
+      </div>
+    </div>
+    <button onclick="closeModal('ideas-modal')" class="mt-6 w-full py-3 bg-[#800020] font-bold text-white rounded-xl hover:bg-[#600018] shadow-md transition-colors">Awesome, Close Ideas</button>
+  </div>
+</div>
+
+<script>
+  function openModal(id) {
+    const modal = document.getElementById(id);
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    // Force reflow
+    void modal.offsetWidth;
+    modal.classList.remove('opacity-0');
+    modal.querySelector('div').classList.remove('scale-95');
+  }
+
+  function closeModal(id) {
+    const modal = document.getElementById(id);
+    modal.classList.add('opacity-0');
+    modal.querySelector('div').classList.add('scale-95');
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }, 300);
+  }
+</script>
+{% endblock %}

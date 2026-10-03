@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-12 font-sans select-none">
+  
+  <!-- Header -->
+  <div class="text-center space-y-3 max-w-2xl mx-auto">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-300">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      <span>DIRECT PROTOCOL SUPPORT</span>
+    </div>
+
+    <h1 class="font-display font-extrabold text-4xl sm:text-5xl text-white tracking-tight">
+      Get in Touch with ReTrace
+    </h1>
+
+    <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+      Whether you are an independent repair shop, a recycling facility, or an enterprise needing passport integration, our protocol team responds within 4 hours.
+    </p>
+  </div>
+
+  <div id="contact-success" class="hidden p-8 sm:p-12 rounded-3xl bg-zinc-900 border border-zinc-800 text-center space-y-5 max-w-xl mx-auto shadow-2xl animate-in zoom-in-95 duration-200">
+    <div class="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+
+    <div class="space-y-2">
+      <span class="text-[11px] font-mono text-amber-400 uppercase tracking-widest block">
+        DISPATCH CONFIRMED
+      </span>
+      <h3 class="font-display font-bold text-2xl text-white">
+        Message Received
+      </h3>
+      <p class="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto">
+        Your message has been securely recorded. Our team has routed this ticket to the relevant engineering or support coordinator.
+      </p>
+    </div>
+
+    <div class="p-4 rounded-xl bg-zinc-950 border border-zinc-800 font-mono text-xs text-zinc-400 max-w-xs mx-auto">
+      <span>TICKET REFERENCE:</span>
+      <div id="ticket-id" class="text-sm font-bold text-emerald-400 mt-1"></div>
+    </div>
+
+    <button type="button" onclick="resetForm()" class="px-6 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs transition-colors cursor-pointer">
+      Submit Another Inquiry
+    </button>
+  </div>
+
+  <div id="contact-form-container" class="p-6 sm:p-8 rounded-3xl bg-zinc-900/90 border border-zinc-800 shadow-xl space-y-8">
+    
+    <!-- Inquiry Options Selection -->
+    <div class="space-y-3">
+      <label class="text-xs font-mono font-semibold text-zinc-300 uppercase tracking-wider block">
+        Select Department / Inquiry Type
+      </label>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+        <button type="button" onclick="selectType('GENERAL_ENQUIRY', this)" class="type-btn p-3.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between space-y-2 bg-amber-400/10 border-amber-400/40 text-white">
+          <div class="flex items-center justify-between w-full">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 indicator"></span>
+          </div>
+          <div class="text-left w-full">
+            <div class="font-mono text-xs font-bold leading-tight">GENERAL ENQUIRY</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">Protocol questions, partnerships, and media</div>
+          </div>
+        </button>
+        <button type="button" onclick="selectType('REPAIRER_SUPPORT', this)" class="type-btn p-3.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between space-y-2 bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200">
+          <div class="flex items-center justify-between w-full">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 indicator hidden"></span>
+          </div>
+          <div class="text-left w-full">
+            <div class="font-mono text-xs font-bold leading-tight">REPAIRER SUPPORT</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">Shop verification, onboarding, or work orders</div>
+          </div>
+        </button>
+        <button type="button" onclick="selectType('RECOVERY_PARTNER', this)" class="type-btn p-3.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between space-y-2 bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200">
+          <div class="flex items-center justify-between w-full">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500"><path d="M7 15.3 3.4 9 12 3.3z"/><path d="M13.8 21.4 7 15.3l8.6-5.7z"/><path d="M20.6 9 13.8 21.4l-5.2-12.1z"/></svg>
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 indicator hidden"></span>
+          </div>
+          <div class="text-left w-full">
+            <div class="font-mono text-xs font-bold leading-tight">RECOVERY PARTNER</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">R2v3 recycling and material smelting routing</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Form Fields -->
+    <form id="contact-form" class="space-y-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="space-y-1.5">
+          <label class="text-xs font-mono text-zinc-300">Your Full Name *</label>
+          <input type="text" id="c-name" required placeholder="e.g. Alex Morgan" class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-xs sm:text-sm font-sans focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 transition-colors" />
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-xs font-mono text-zinc-300">Email Address *</label>
+          <input type="email" id="c-email" required placeholder="alex@domain.com" class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-xs sm:text-sm font-sans focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 transition-colors" />
+        </div>
+      </div>
+
+      <div class="space-y-1.5">
+        <label class="text-xs font-mono text-zinc-300">Subject</label>
+        <input type="text" id="c-subject" placeholder="Brief summary of your question or inquiry..." class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-xs sm:text-sm font-sans focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 transition-colors" />
+      </div>
+
+      <div class="space-y-1.5">
+        <label class="text-xs font-mono text-zinc-300">Message Content *</label>
+        <textarea rows="4" id="c-msg" required placeholder="Provide details about your hardware, shop registration, or inquiry..." class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-xs sm:text-sm font-sans focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 transition-colors resize-none"></textarea>
+      </div>
+
+      <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-[11px] font-mono text-zinc-500">
+          Official contact: <span class="text-zinc-300">support@retrace.io</span>
+        </div>
+
+        <button type="submit" id="submit-btn" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer">
+          <span id="submit-text">SEND MESSAGE</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  let selectedType = 'GENERAL_ENQUIRY';
+
+  function selectType(type, element) {
+    selectedType = type;
+    document.querySelectorAll('.type-btn').forEach(btn => {
+      btn.classList.remove('bg-amber-400/10', 'border-amber-400/40', 'text-white');
+      btn.classList.add('bg-zinc-950', 'border-zinc-800', 'text-zinc-400');
+      btn.querySelector('.indicator').classList.add('hidden');
+      btn.querySelector('svg').classList.remove('text-amber-400');
+      btn.querySelector('svg').classList.add('text-zinc-500');
+    });
+
+    element.classList.remove('bg-zinc-950', 'border-zinc-800', 'text-zinc-400');
+    element.classList.add('bg-amber-400/10', 'border-amber-400/40', 'text-white');
+    element.querySelector('.indicator').classList.remove('hidden');
+    element.querySelector('svg').classList.add('text-amber-400');
+    element.querySelector('svg').classList.remove('text-zinc-500');
+  }
+
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('submit-text').innerText = 'DISPATCHING...';
+    document.getElementById('submit-btn').disabled = true;
+
+    setTimeout(() => {
+      const id = 'TICK-' + Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('ticket-id').innerText = id;
+      document.getElementById('contact-form-container').classList.add('hidden');
+      document.getElementById('contact-success').classList.remove('hidden');
+      
+      document.getElementById('submit-text').innerText = 'SEND MESSAGE';
+      document.getElementById('submit-btn').disabled = false;
+    }, 600);
+  });
+
+  function resetForm() {
+    document.getElementById('c-name').value = '';
+    document.getElementById('c-email').value = '';
+    document.getElementById('c-subject').value = '';
+    document.getElementById('c-msg').value = '';
+    document.getElementById('contact-success').classList.add('hidden');
+    document.getElementById('contact-form-container').classList.remove('hidden');
+  }
+</script>
+{% endblock %}

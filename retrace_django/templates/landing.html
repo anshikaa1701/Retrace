@@ -1,0 +1,906 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block backgrounds %}
+  <div id="intro-sequence-mount"></div>
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div id="cursor-grid-mount"></div>
+  </div>
+{% endblock %}
+
+{% block content %}
+<!-- Loading Screen Styles -->
+<style>
+  #tech-loader {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 9999;
+    background-color: #09090b; /* dark bg */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease-in-out;
+    overflow: hidden;
+    pointer-events: none; /* Allow scrolling of the page beneath the loader */
+  }
+  #plexus-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -2;
+    background-color: #0a0b1a; /* Lighter deep blue/purple */
+  }
+  .loader-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle, rgba(9,9,11,0.0) 0%, rgba(9,9,11,0.6) 100%); /* Much lighter overlay */
+    z-index: -1;
+    pointer-events: none;
+  }
+  .tech-grid-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    opacity: 0.2;
+    background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: scroll-bg 2s linear infinite;
+  }
+  .huge-title {
+    position: relative;
+    font-family: 'Cinzel', 'Playfair Display', 'Didot', 'Georgia', serif;
+    font-size: clamp(4rem, 12vw, 12rem);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #ffffff;
+    text-transform: uppercase;
+    z-index: 10;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.2), 0 0 60px rgba(168, 85, 247, 0.4);
+    animation: pulse-title 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-title {
+    0%, 100% { opacity: 0.8; transform: scale(0.98); filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.2)); }
+    50% { opacity: 1; transform: scale(1.02); filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6)); }
+  }
+
+  @keyframes scroll-bg { 0% { background-position: 0 0; } 100% { background-position: 0 40px; } }
+
+</style>
+
+<!-- Loading Screen -->
+<div id="tech-loader">
+  <canvas id="plexus-bg"></canvas>
+  <div class="loader-overlay"></div>
+  <div class="tech-grid-bg"></div>
+  
+  <h1 class="huge-title">RETRACE</h1>
+</div>
+<div class="relative min-h-screen text-[#F5F5F5] font-sans selection:bg-amber-400/20 selection:text-amber-300">
+  
+  <!-- 01 — HERO SECTION -->
+  <section id="hero" class="relative pt-12 sm:pt-16 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center stagger-container">
+    <div class="space-y-6 w-full max-w-5xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-300">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+        <span>RETRACE PROTOCOL</span>
+        <span class="text-zinc-600">/</span>
+        <span>CIRCULAR HARDWARE INTELLIGENCE</span>
+      </div>
+
+      <h1 class="font-display font-bold text-4xl sm:text-6xl lg:text-7xl tracking-tight text-white max-w-4xl mx-auto leading-[1.08] relative select-none cursor-default">
+        <span class="text-white">Give Every Physical Product</span>
+        <br class="hidden sm:inline" /> 
+        <span class="text-amber-400">a Next Path.</span>
+      </h1>
+
+      <p class="text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+        ReTrace gives physical devices a permanent digital passport and determines what happens next — authenticating repairs, syncing parts provenance, and orchestrating circular resale, harvest, or certified recycling.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <a href="/scan" class="px-5 py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs tracking-wider flex items-center gap-2 transition-colors cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-black"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+          <span>SCAN PRODUCT QR</span>
+        </a>
+
+        <a href="/products/new" class="px-5 py-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700 text-xs font-medium tracking-wide flex items-center gap-2 transition-colors cursor-pointer">
+          <span>Register New Device</span>
+        </a>
+
+        <a href="/passport/RP-DL-72891" class="px-4 py-2.5 rounded-lg text-zinc-400 hover:text-white text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer">
+          <span>View Benchmark Passport</span>
+        </a>
+      </div>
+
+      <div class="pt-8 max-w-4xl mx-auto">
+        <div class="rounded-xl border border-zinc-800 bg-zinc-950/80 shadow-2xl overflow-hidden text-left transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-zinc-700 cursor-default">
+          <div class="px-4 py-2.5 bg-zinc-900 border-b border-zinc-800 flex items-center justify-between text-xs font-mono">
+            <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-zinc-700"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-zinc-700"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-zinc-700"></span>
+              </div>
+              <span class="text-zinc-500 ml-2">retrace.id/p/RP-DL-72891</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span class="text-emerald-400 text-[10px] font-semibold">VERIFIED LEDGER</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div id="tilt-passport-card-hero-mount"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 — PROBLEM & PROTOCOL FOUNDATION -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-zinc-800/80">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 stagger-container">
+      <div class="p-6 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:bg-zinc-800/80 cursor-default">
+        <span class="font-mono text-[10px] text-zinc-500 uppercase tracking-wider block">01 / THE UNSEEN ORIGIN</span>
+        <h3 class="font-semibold text-lg text-white">Every Product Has a History</h3>
+        <p class="text-xs text-zinc-400 leading-relaxed font-mono">Every circuit board represents rare earths, precision fabrication, and embedded human carbon.</p>
+      </div>
+
+      <div class="p-6 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:bg-zinc-800/80 cursor-default">
+        <span class="font-mono text-[10px] text-rose-400/80 uppercase tracking-wider block">02 / THE INFORMATION GAP</span>
+        <h3 class="font-semibold text-lg text-white">Most History Disappears</h3>
+        <p class="text-xs text-zinc-400 leading-relaxed font-mono">Invoices get lost, repair logs evaporate, and functional electronics are discarded prematurely.</p>
+      </div>
+
+      <div class="p-6 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:bg-zinc-800/80 cursor-default">
+        <span class="font-mono text-[10px] text-amber-400 uppercase tracking-wider block">03 / THE RETRACE PROTOCOL</span>
+        <h3 class="font-semibold text-lg text-white">Permanent Digital Identity</h3>
+        <p class="text-xs text-zinc-400 leading-relaxed font-mono">A tamper-proof ledger linking hardware state, verified technicians, and circular pathways.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 — KEYBOARD STORY -->
+  <section id="keyboard-story" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div id="interactive-keyboard-mount"></div>
+  </section>
+
+  <!-- 04 — PRODUCT PASSPORT -->
+  <section id="passport" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
+    <div class="text-center space-y-3 max-w-2xl mx-auto">
+      <span class="font-mono text-xs text-amber-400 uppercase tracking-widest block">PHYSICAL IDENTITY PASSPORT</span>
+      <h2 class="font-display font-black text-3xl sm:text-5xl text-white tracking-tight">The Digital Product Passport.</h2>
+      <p class="text-zinc-400 text-sm sm:text-base">Every product possesses a permanent digital passport. Hover to tilt in 3D space, or scan the QR code to open its live verified ledger.</p>
+    </div>
+    <div class="max-w-2xl mx-auto group perspective">
+      <div class="relative p-6 sm:p-8 rounded-xl bg-zinc-900 border border-zinc-800 shadow-xl overflow-hidden transition-transform duration-500 hover:-translate-y-1 hover:shadow-2xl hover:border-zinc-700">
+        <!-- Shine effect -->
+        <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        
+        <div class="flex flex-col sm:flex-row gap-6 items-center sm:items-stretch relative z-10">
+          
+          <!-- Left: QR Code -->
+          <div class="shrink-0 p-3 bg-white rounded-xl shadow-inner flex flex-col items-center justify-center border border-zinc-200">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://retrace.id/p/RP-DL-72891&color=09090b&bgcolor=ffffff&margin=0" alt="Product QR Code" class="w-28 h-28 object-contain" />
+            <span class="text-[9px] font-mono text-zinc-900 font-bold tracking-widest mt-2">SCAN TO VERIFY</span>
+          </div>
+
+          <!-- Right: Details -->
+          <div class="flex-1 space-y-4 w-full stagger-container">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span class="font-mono text-xs font-semibold text-white tracking-wider">ACTIVE PASSPORT</span>
+              </div>
+              <span class="font-mono text-xs text-zinc-500">RP-DL-72891</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <span class="text-[10px] text-zinc-500 uppercase block mb-1">MANUFACTURER</span>
+                <span class="text-white font-medium text-sm">Dell Technologies</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-zinc-500 uppercase block mb-1">PRODUCT MODEL</span>
+                <span class="text-white font-medium text-sm">Inspiron 15 5000</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-zinc-500 uppercase block mb-1">DATE OF ORIGIN</span>
+                <span class="text-zinc-300 font-mono text-xs">2023-08-14</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-zinc-500 uppercase block mb-1">LEDGER HASH</span>
+                <span class="text-amber-400 font-mono text-xs truncate block w-full" title="0x8f72a3b1...9c4d">0x8f72...9c4d</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-zinc-800 flex flex-wrap gap-2 text-[10px] font-mono">
+               <span class="px-2 py-1 rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700">OEM AUTHENTICATED ✓</span>
+               <span class="px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 transition-all duration-300 hover:scale-105 hover:bg-emerald-500/20 hover:shadow-[0_0_10px_rgba(16,185,129,0.2)] cursor-default">WARRANTY ACTIVE ✓</span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — AI ASSESSMENT -->
+  <section id="ai-assessment" class="py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div id="immersive-ai-section-mount"></div>
+  </section>
+
+  <!-- 06 — NEXT PATH -->
+  <section class="py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
+    <div class="text-center space-y-3 max-w-3xl mx-auto">
+      <span class="font-mono text-xs text-amber-400 uppercase tracking-widest block">CIRCULAR NEXT PATH</span>
+      <h2 class="font-display font-extrabold text-4xl sm:text-6xl text-white tracking-tight">What should happen next?</h2>
+      <p class="text-zinc-400 text-sm sm:text-base">Move cursor over each path to examine real-time repairability, estimated recovery value, and verified partner networks.</p>
+    </div>
+    <div class="w-full max-w-4xl mx-auto flex justify-center py-16 overflow-hidden">
+      <div class="relative w-full max-w-lg" style="height: 500px;">
+        
+        <!-- Center Hub -->
+        <div class="absolute z-20 flex flex-col items-center justify-center rounded-full shadow-2xl transition-transform hover:scale-105 cursor-default" 
+             style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 140px; height: 140px; background-color: #FFFFFF; border: 1px solid rgba(128, 0, 32, 0.2);">
+          <svg class="w-8 h-8 mb-2" style="color: #800020;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
+          <span class="font-bold text-xs tracking-widest" style="color: #800020;">DEVICE</span>
+          <span class="text-[10px] font-mono tracking-widest" style="color: #9A2A2A;">PASSPORT</span>
+        </div>
+
+        <!-- Node 1: Top (Repair) -->
+        <div class="absolute z-30 flex flex-col items-center cursor-default" 
+             style="top: 15%; left: 50%; transform: translate(-50%, -50%); width: 180px;">
+          <div class="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-3 shadow-lg transition-transform hover:-translate-y-2" style="background-color: #FFFFFF; border: 1px solid rgba(0,0,0,0.05);">
+            <svg class="w-6 h-6" style="color: #0277BD;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+          </div>
+          <h3 class="font-bold text-sm tracking-wide text-center" style="color: #800020;">Repair & Upgrade</h3>
+        </div>
+
+        <!-- Node 2: Bottom Right (Resale) -->
+        <div class="absolute z-30 flex flex-col items-center cursor-default" 
+             style="top: 75%; left: 85%; transform: translate(-50%, -50%); width: 180px;">
+          <div class="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-3 shadow-lg transition-transform hover:-translate-y-2 hover:translate-x-2" style="background-color: #FFFFFF; border: 1px solid rgba(0,0,0,0.05);">
+            <svg class="w-6 h-6" style="color: #0277BD;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+          </div>
+          <h3 class="font-bold text-sm tracking-wide text-center" style="color: #800020;">Secondary Resale</h3>
+        </div>
+
+        <!-- Node 3: Bottom Left (Recovery) -->
+        <div class="absolute z-30 flex flex-col items-center cursor-default" 
+             style="top: 75%; left: 15%; transform: translate(-50%, -50%); width: 180px;">
+          <div class="w-14 h-14 mx-auto rounded-full flex items-center justify-center mb-3 shadow-lg transition-transform hover:-translate-y-2 hover:-translate-x-2" style="background-color: #FFFFFF; border: 1px solid rgba(0,0,0,0.05);">
+            <svg class="w-6 h-6" style="color: #0277BD;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          </div>
+          <h3 class="font-bold text-sm tracking-wide text-center" style="color: #800020;">Material Recovery</h3>
+        </div>
+
+        <!-- SVG Flow Lines -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none z-10" xmlns="http://www.w3.org/2000/svg">
+          <!-- Center to Top -->
+          <line x1="50%" y1="50%" x2="50%" y2="15%" stroke="#800020" stroke-width="1.5" stroke-dasharray="6 6" class="opacity-50">
+             <animate attributeName="stroke-dashoffset" from="24" to="0" dur="1.5s" repeatCount="indefinite" />
+          </line>
+          <!-- Center to Bottom Right -->
+          <line x1="50%" y1="50%" x2="85%" y2="75%" stroke="#800020" stroke-width="1.5" stroke-dasharray="6 6" class="opacity-50">
+             <animate attributeName="stroke-dashoffset" from="24" to="0" dur="1.5s" repeatCount="indefinite" />
+          </line>
+          <!-- Center to Bottom Left -->
+          <line x1="50%" y1="50%" x2="15%" y2="75%" stroke="#800020" stroke-width="1.5" stroke-dasharray="6 6" class="opacity-50">
+             <animate attributeName="stroke-dashoffset" from="24" to="0" dur="1.5s" repeatCount="indefinite" />
+          </line>
+          <!-- Outer Decorative Ring -->
+          <circle cx="50%" cy="50%" r="38%" fill="none" stroke="#800020" stroke-width="1" stroke-dasharray="4 8" class="opacity-20 animate-[spin_60s_linear_infinite]" style="transform-origin: center;" />
+        </svg>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — CONTINUOUS LIFECYCLE -->
+  <section id="lifecycle" class="py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
+    <div class="text-center space-y-3 max-w-2xl mx-auto">
+      <span class="font-mono text-xs text-amber-400 uppercase tracking-widest block">ONE CONTINUOUS LIFECYCLE</span>
+      <h2 class="font-display font-black text-3xl sm:text-5xl text-white tracking-tight">The Closed Loop Arc.</h2>
+      <p class="text-zinc-400 text-sm sm:text-base">From the initial factory gate to secondary resale and ultimate hydrometallurgical recovery.</p>
+    </div>
+    <div class="max-w-5xl mx-auto w-full pt-16 pb-20 overflow-x-auto overflow-y-hidden">
+      <div class="relative flex justify-between items-center px-8 sm:px-12" style="min-width: 768px; height: 120px;">
+        
+        <!-- Track Line -->
+        <div class="absolute top-1/2 left-16 right-16 h-[1px] -translate-y-1/2 z-0" style="background-color: rgba(128, 0, 32, 0.2);"></div>
+        
+        <!-- Animated Active Track -->
+        <div class="absolute top-1/2 left-16 h-[2px] -translate-y-1/2 z-0 opacity-80" style="background: linear-gradient(90deg, #800020, #0277BD, transparent); width: 75%; animation: pulse 3s infinite;"></div>
+
+        <!-- Nodes -->
+        <div class="relative z-10 flex flex-col items-center group w-12 shrink-0">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 cursor-default" style="background-color: #FFFFFF; border: 2px solid #800020;">
+            <span class="w-3 h-3 rounded-full" style="background-color: #800020;"></span>
+          </div>
+          <div class="absolute text-center w-32" style="top: 100%; left: 50%; transform: translateX(-50%); margin-top: 16px;">
+            <span class="text-[10px] font-mono block mb-1 uppercase tracking-widest" style="color: #9A2A2A;">STAGE 1</span>
+            <h4 class="text-sm font-bold" style="color: #800020; line-height: 1.2;">Manufacture</h4>
+          </div>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center group w-12 shrink-0">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 cursor-default" style="background-color: #FFFFFF; border: 2px solid #800020;">
+            <span class="w-3 h-3 rounded-full" style="background-color: #800020;"></span>
+          </div>
+          <div class="absolute text-center w-32" style="top: 100%; left: 50%; transform: translateX(-50%); margin-top: 16px;">
+            <span class="text-[10px] font-mono block mb-1 uppercase tracking-widest" style="color: #9A2A2A;">STAGE 2</span>
+            <h4 class="text-sm font-bold" style="color: #800020; line-height: 1.2;">Primary Use</h4>
+          </div>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center group w-12 shrink-0">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 cursor-default" style="background-color: #FFFFFF; border: 2px solid #0277BD;">
+            <span class="w-3 h-3 rounded-full" style="background-color: #0277BD;"></span>
+          </div>
+          <div class="absolute text-center w-32" style="top: 100%; left: 50%; transform: translateX(-50%); margin-top: 16px;">
+            <span class="text-[10px] font-mono block mb-1 uppercase tracking-widest" style="color: #0277BD;">STAGE 3</span>
+            <h4 class="text-sm font-bold" style="color: #800020; line-height: 1.2;">Verified Repair</h4>
+          </div>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center group w-12 shrink-0">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 opacity-80 hover:opacity-100 cursor-default" style="background-color: #FFFFFF; border: 2px dashed rgba(128, 0, 32, 0.4);">
+            <span class="w-2 h-2 rounded-full transition-colors" style="background-color: rgba(128, 0, 32, 0.4);"></span>
+          </div>
+          <div class="absolute text-center w-36 opacity-70 group-hover:opacity-100 transition-opacity" style="top: 100%; left: 50%; transform: translateX(-50%); margin-top: 16px;">
+            <span class="text-[10px] font-mono block mb-1 uppercase tracking-widest" style="color: #9A2A2A;">STAGE 4</span>
+            <h4 class="text-sm font-bold" style="color: #800020; line-height: 1.2;">Secondary Resale</h4>
+          </div>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center group w-12 shrink-0">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 opacity-80 hover:opacity-100 cursor-default" style="background-color: #FFFFFF; border: 2px dashed rgba(128, 0, 32, 0.4);">
+            <span class="w-2 h-2 rounded-full transition-colors" style="background-color: rgba(128, 0, 32, 0.4);"></span>
+          </div>
+          <div class="absolute text-center w-32 opacity-70 group-hover:opacity-100 transition-opacity" style="top: 100%; left: 50%; transform: translateX(-50%); margin-top: 16px;">
+            <span class="text-[10px] font-mono block mb-1 uppercase tracking-widest" style="color: #9A2A2A;">STAGE 5</span>
+            <h4 class="text-sm font-bold" style="color: #800020; line-height: 1.2;">Recovery</h4>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 — VERIFIED REPAIR: AUDIT RECORD -->
+  <section id="verified-repair" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10 border-t border-zinc-800/80">
+    <div class="text-center space-y-2 max-w-2xl mx-auto">
+      <span class="font-mono text-xs text-amber-400 uppercase tracking-wider block">VERIFIABLE AUDIT LEDGER</span>
+      <h2 class="font-display font-bold text-3xl sm:text-5xl text-white tracking-tight">Proof in Every Solder.</h2>
+      <p class="text-zinc-400 text-sm sm:text-base">Every replacement component is authenticated and signed by licensed repair facilities.</p>
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+      <div class="p-6 sm:p-8 rounded-xl bg-zinc-900 border border-zinc-800 shadow-xl space-y-5">
+        <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="font-mono text-xs font-semibold text-white tracking-wider">BATTERY REPLACEMENT</span>
+          </div>
+          <span class="font-mono text-xs text-zinc-400">12 SEP 2026</span>
+        </div>
+
+        <div class="flex flex-wrap gap-2 text-xs font-mono">
+          <span class="px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-medium flex items-center gap-1.5 transition-all duration-300 hover:scale-105 hover:bg-emerald-500/20 hover:shadow-[0_0_10px_rgba(16,185,129,0.2)] cursor-default">
+            REPAIRER VERIFIED ✓
+          </span>
+          <span class="px-2.5 py-1 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-300 font-medium flex items-center gap-1.5">
+            DOCUMENT VERIFIED ✓
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 p-3.5 rounded-lg bg-zinc-950/60 border border-zinc-800 font-mono text-xs">
+          <div>
+            <span class="text-[10px] text-zinc-500 uppercase block mb-0.5">PART INSTALLED</span>
+            <span class="text-white font-medium text-sm">Original Dell Battery 56Wh</span>
+            <span class="text-[10px] text-zinc-400 block mt-0.5">SN: DL-BAT-882193</span>
+          </div>
+          <div>
+            <span class="text-[10px] text-zinc-500 uppercase block mb-0.5">AUTHORIZED REPAIRER</span>
+            <span class="text-amber-400 font-medium text-sm">TechFix Solutions</span>
+            <span class="text-[10px] text-zinc-400 block mt-0.5">Lic: #TF-IND-2024</span>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-2 border-t border-zinc-800 text-xs font-mono">
+          <span class="text-zinc-500">SIGNATURE: 0x9b7f...c421</span>
+          <a href="/passport/RP-DL-72891" class="text-amber-400 hover:underline flex items-center gap-1">
+            <span>View Passport Audit</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — TOP REPAIRERS -->
+  <div id="top-repairers-showcase-mount"></div>
+
+  <!-- 10 — SECOND LIFE RESALE -->
+  <section id="resale" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10 border-t border-zinc-800/80">
+    <div class="text-center space-y-2 max-w-2xl mx-auto">
+      <span class="font-mono text-xs text-amber-400 uppercase tracking-wider block">SECONDARY MARKETPLACE</span>
+      <h2 class="font-display font-bold text-3xl sm:text-5xl text-white tracking-tight">Second Life Starts with Trust.</h2>
+      <p class="text-zinc-400 text-sm sm:text-base">No blind purchases or disguised defects. Every resale listing attaches its verifiable cryptographic passport.</p>
+    </div>
+
+    <div class="max-w-xl mx-auto">
+      <div class="p-6 sm:p-8 rounded-xl bg-zinc-900 border border-zinc-800 shadow-xl space-y-5">
+        <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <div>
+            <span class="text-xs font-mono text-zinc-500 uppercase">OFFICIAL LISTING</span>
+            <h3 class="font-bold text-xl text-white">DELL INSPIRON 15</h3>
+          </div>
+          <span class="font-bold text-xl text-amber-400">₹18,000–₹21,000</span>
+        </div>
+
+        <div class="flex flex-wrap gap-2 text-xs font-mono">
+          <span class="px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 transition-all duration-300 hover:scale-105 hover:bg-emerald-500/20 hover:shadow-[0_0_10px_rgba(16,185,129,0.2)] cursor-default">GOOD CONDITION</span>
+          <span class="px-2.5 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">2 VERIFIED REPAIRS</span>
+          <span class="px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">DIGITAL PASSPORT ✓</span>
+        </div>
+
+        <p class="text-xs text-zinc-400 font-mono leading-relaxed">
+          Battery replaced 12 Sep 2026 with OEM pack. Verified thermal repasting performed. Full passport history transfers to buyer on checkout.
+        </p>
+
+        <div class="pt-2">
+          <a href="/resale" class="w-full py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer">
+            <span>CREATE LISTING / EXPLORE RESALE</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 — RECOVERY & END OF LIFE -->
+  <section id="recovery" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10 border-t border-zinc-800/80">
+    <div class="text-center space-y-2 max-w-3xl mx-auto">
+      <span class="font-mono text-xs text-amber-400 uppercase tracking-wider block">CLOSED LOOP EXTRACTION</span>
+      <h2 class="font-display font-bold text-3xl sm:text-5xl text-white tracking-tight">When repair is no longer practical...</h2>
+      <p class="text-zinc-400 text-sm sm:text-base">ReTrace orchestrates direct courier handoff to certified circular recyclers.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+      <div class="p-5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2.5">
+        <h4 class="font-bold text-base text-white">SELL FOR PARTS</h4>
+        <p class="text-xs font-mono text-zinc-400 leading-relaxed">Recover operational 16GB DDR4 RAM, NVMe SSDs, display flex cables, and charger modules.</p>
+      </div>
+
+      <div class="p-5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2.5">
+        <h4 class="font-bold text-base text-white">MATERIAL RECOVERY</h4>
+        <p class="text-xs font-mono text-zinc-400 leading-relaxed">Aluminum top casing and copper heat pipes routed into high-efficiency secondary foundries.</p>
+      </div>
+
+      <div class="p-5 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2.5">
+        <h4 class="font-bold text-base text-white">E-WASTE RECYCLING</h4>
+        <p class="text-xs font-mono text-zinc-400 leading-relaxed">R2v3 compliant smelting of mainboard traces extracting gold, palladium, and solder.</p>
+      </div>
+    </div>
+
+    <div class="max-w-3xl mx-auto text-center pt-8 space-y-4">
+      <div class="font-display font-bold text-2xl sm:text-4xl text-white tracking-tight leading-snug">
+        The Product May End. <br />
+        <span class="text-amber-400">The Material Doesn't Have To.</span>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 text-xs font-mono">
+        <span class="px-3 py-1 rounded-md bg-zinc-900 text-zinc-300 border border-zinc-800">COLLECTED ✓</span>
+        <span class="px-3 py-1 rounded-md bg-zinc-900 text-zinc-300 border border-zinc-800">RECOVERY VERIFIED ✓</span>
+        <span class="px-3 py-1 rounded-md bg-amber-400/10 text-amber-300 border border-amber-400/30 font-semibold">MATERIAL RECOVERED ✓</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — FINAL HERO STATEMENT -->
+  <section class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-8 border-t border-zinc-800/80">
+    <div class="space-y-3">
+      <h2 class="font-display font-bold tracking-tight text-3xl sm:text-5xl text-white">
+        Give Every Product <br />
+        <span class="text-amber-400">A Next Path.</span>
+      </h2>
+      <p class="font-mono text-xs text-zinc-500 tracking-wider uppercase">
+        RETRACE PROTOCOL • CIRCULAR HARDWARE INTELLIGENCE
+      </p>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+      <a href="/scan" class="px-5 py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs tracking-wider flex items-center gap-2 transition-colors cursor-pointer">
+        <span>SCAN PRODUCT QR</span>
+      </a>
+
+      <a href="/products/new" class="px-5 py-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700 font-medium text-xs tracking-wider transition-colors flex items-center gap-2 cursor-pointer">
+        <span>Create Product Passport</span>
+      </a>
+    </div>
+  </section>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const loader = document.getElementById('tech-loader');
+  let plexusAnimId;
+  if (loader) {
+    // Plexus Animation
+    const canvas = document.getElementById('plexus-bg');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let pWidth, pHeight;
+      let pParticles = [];
+
+      function pResize() {
+        pWidth = canvas.width = window.innerWidth;
+        pHeight = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', pResize);
+      pResize();
+
+      class PNode {
+        constructor() {
+          this.x = Math.random() * pWidth;
+          this.y = Math.random() * pHeight;
+          this.vx = (Math.random() - 0.5) * 2.5; // Much faster speed
+          this.vy = (Math.random() - 0.5) * 2.5; // Much faster speed
+          this.radius = Math.random() * 2.5 + 1.5; // Slightly larger nodes
+          this.isPurple = Math.random() > 0.5;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < 0 || this.x > pWidth) this.vx *= -1;
+          if (this.y < 0 || this.y > pHeight) this.vy *= -1;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = this.isPurple ? 'rgba(168, 85, 247, 1)' : 'rgba(56, 189, 248, 1)'; // Brighter nodes
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < Math.floor((pWidth * pHeight) / 7000); i++) { // More particles
+        pParticles.push(new PNode());
+      }
+
+      function pAnimate() {
+        ctx.clearRect(0, 0, pWidth, pHeight);
+        
+        for (let i = 0; i < pParticles.length; i++) {
+          for (let j = i + 1; j < pParticles.length; j++) {
+            let dx = pParticles[i].x - pParticles[j].x;
+            let dy = pParticles[i].y - pParticles[j].y;
+            let dist = dx * dx + dy * dy;
+            if (dist < 32000) { // Much longer connection distance
+              let opacity = 1 - dist / 32000;
+              ctx.beginPath();
+              ctx.moveTo(pParticles[i].x, pParticles[i].y);
+              ctx.lineTo(pParticles[j].x, pParticles[j].y);
+              let strokeColor = pParticles[i].isPurple ? '168, 85, 247' : '56, 189, 248';
+              ctx.strokeStyle = `rgba(${strokeColor}, ${opacity * 0.7})`; // Brighter lines
+              ctx.lineWidth = 1.5; // Thicker lines
+              ctx.stroke();
+            }
+          }
+        }
+
+        pParticles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+
+        plexusAnimId = requestAnimationFrame(pAnimate);
+      }
+      pAnimate();
+    }
+
+    // Keep it on screen for 15 seconds, then fade out
+    const siteHeader = document.querySelector('header');
+    if (siteHeader) {
+      siteHeader.style.opacity = '0';
+      siteHeader.style.pointerEvents = 'none';
+      siteHeader.style.transition = 'opacity 1s ease-in-out';
+    }
+
+    setTimeout(() => {
+      loader.style.opacity = '0';
+      if (siteHeader) {
+        siteHeader.style.opacity = '1';
+        siteHeader.style.pointerEvents = 'auto';
+      }
+      setTimeout(() => {
+        if (loader.parentNode) {
+          loader.parentNode.removeChild(loader);
+        }
+        cancelAnimationFrame(plexusAnimId);
+      }, 1000);
+    }, 10000);
+  }
+
+  if (document.getElementById("retrace-interactive-bg")) return;
+  
+  const canvas = document.createElement("canvas");
+  canvas.id = "retrace-interactive-bg";
+  canvas.className = "fixed inset-0 w-full h-full pointer-events-none";
+  // Z-index 1 ensures it's above the body's Butter Yellow background but behind main content (z-10)
+  canvas.style.zIndex = "1"; 
+  document.body.insertBefore(canvas, document.body.firstChild);
+  
+  // CRITICAL FIX: Make the main content wrapper transparent so the canvas can be seen through it!
+  const wrappers = document.querySelectorAll('.min-h-screen:not(body)');
+  wrappers.forEach(w => {
+    w.style.setProperty('background-color', 'transparent', 'important');
+    w.style.setProperty('background', 'transparent', 'important');
+  });
+
+  const ctx = canvas.getContext("2d");
+  let width, height;
+  let mouse = { x: -1000, y: -1000, radius: 250 };
+
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+    init();
+  }
+  window.addEventListener('resize', resize);
+
+  // Brand Colors
+  const burgundy = '128, 0, 32';
+  const blue = '2, 119, 189';
+
+  let particles = [];
+  
+  class TechNode {
+    constructor() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+      this.vx = (Math.random() - 0.5) * 1.0;
+      this.vy = (Math.random() - 0.5) * 1.0;
+      this.size = Math.random() * 4 + 2;
+      this.type = Math.floor(Math.random() * 3); // 0: square, 1: cross, 2: dot
+      this.colorStr = Math.random() > 0.6 ? blue : burgundy;
+    }
+    
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0 || this.x > width) this.vx *= -1;
+      if (this.y < 0 || this.y > height) this.vy *= -1;
+    }
+    
+    draw(opacityMod = 1) {
+      ctx.strokeStyle = `rgba(${this.colorStr}, ${0.5 * opacityMod})`;
+      ctx.fillStyle = `rgba(${this.colorStr}, ${0.2 * opacityMod})`;
+      ctx.lineWidth = 1.5;
+      
+      ctx.beginPath();
+      if (this.type === 0) {
+        ctx.rect(this.x - this.size, this.y - this.size, this.size*2, this.size*2);
+        ctx.stroke();
+        ctx.fill();
+      } else if (this.type === 1) {
+        ctx.moveTo(this.x - this.size, this.y);
+        ctx.lineTo(this.x + this.size, this.y);
+        ctx.moveTo(this.x, this.y - this.size);
+        ctx.lineTo(this.x, this.y + this.size);
+        ctx.stroke();
+      } else {
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+  }
+
+  let dataStreams = [];
+  class DataStream {
+    constructor() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+      this.speed = Math.random() * 1.5 + 0.5;
+      const texts = ["REPAIR", "010110", "RECOVER", "LIFECYCLE", "PASSPORT", "DIAGNOSTIC", "1011"];
+      this.text = texts[Math.floor(Math.random() * texts.length)];
+      this.colorStr = Math.random() > 0.5 ? blue : burgundy;
+    }
+    update() {
+      this.y += this.speed;
+      if (this.y > height + 50) {
+        this.y = -50;
+        this.x = Math.random() * width;
+      }
+    }
+    draw(opacityMod) {
+      ctx.font = "11px monospace";
+      ctx.fillStyle = `rgba(${this.colorStr}, ${0.1 * opacityMod})`;
+      ctx.fillText(this.text, this.x, this.y);
+    }
+  }
+
+  function init() {
+    particles = [];
+    dataStreams = [];
+    let numNodes = Math.floor((width * height) / 10000);
+    for (let i = 0; i < numNodes; i++) particles.push(new TechNode());
+    for (let i = 0; i < 25; i++) dataStreams.push(new DataStream());
+  }
+
+  function drawGrid() {
+    ctx.strokeStyle = `rgba(128, 0, 32, 0.03)`;
+    ctx.lineWidth = 1;
+    let gridSize = 40;
+    let offset = (Date.now() / 40) % gridSize;
+    
+    ctx.beginPath();
+    for(let x = offset; x < width; x += gridSize) {
+      ctx.moveTo(x, 0); ctx.lineTo(x, height);
+    }
+    for(let y = offset; y < height; y += gridSize) {
+      ctx.moveTo(0, y); ctx.lineTo(width, y);
+    }
+    ctx.stroke();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    
+    drawGrid();
+
+    // Circuit PCB Connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        let dx = particles[i].x - particles[j].x;
+        let dy = particles[i].y - particles[j].y;
+        let dist = dx*dx + dy*dy;
+        
+        if (dist < 22000) {
+          // Interactive Hover
+          let mx = mouse.x - particles[i].x;
+          let my = mouse.y - particles[i].y;
+          let mDist = Math.sqrt(mx*mx + my*my);
+          let hoverMod = mDist < mouse.radius ? 2.5 : 0.4;
+          
+          let opacity = (1 - dist / 22000) * hoverMod;
+          if (opacity > 1) opacity = 1;
+
+          ctx.strokeStyle = `rgba(${particles[i].colorStr}, ${opacity * 0.5})`;
+          ctx.lineWidth = hoverMod > 1 ? 1.5 : 0.5;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          // Circuit Trace Pattern (Orthogonal)
+          ctx.lineTo(particles[i].x, particles[j].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    particles.forEach(p => { 
+      let mx = mouse.x - p.x;
+      let my = mouse.y - p.y;
+      let mDist = Math.sqrt(mx*mx + my*my);
+      let hoverMod = mDist < mouse.radius ? 2.5 : 0.6;
+      p.update(); 
+      p.draw(hoverMod); 
+    });
+
+    dataStreams.forEach(s => { 
+      let mx = mouse.x - s.x;
+      let my = mouse.y - s.y;
+      let mDist = Math.sqrt(mx*mx + my*my);
+      let hoverMod = mDist < mouse.radius ? 3 : 1;
+      s.update(); 
+      s.draw(hoverMod); 
+    });
+
+    // Tech Radar Cursor
+    if (mouse.x > 0 && mouse.y > 0) {
+      let pulse = (Math.sin(Date.now() / 200) + 1) / 2; // 0 to 1
+      
+      // Radar Area
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, mouse.radius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(2, 119, 189, ${0.05 + pulse * 0.05})`; // Blue radar pulse
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = `rgba(2, 119, 189, 0.01)`;
+      ctx.fill();
+      
+      // Crosshair Center
+      ctx.beginPath();
+      ctx.moveTo(mouse.x - 10, mouse.y);
+      ctx.lineTo(mouse.x + 10, mouse.y);
+      ctx.moveTo(mouse.x, mouse.y - 10);
+      ctx.lineTo(mouse.x, mouse.y + 10);
+      ctx.strokeStyle = `rgba(128, 0, 32, 0.8)`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  resize();
+  animate();
+});
+
+// Interactive Elements for Next Path and Lifecycle Timeline
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // --- Next Path Interaction ---
+  const nextPathNodes = document.querySelectorAll('section:nth-of-type(6) .z-30.flex-col');
+  nextPathNodes.forEach(node => {
+    node.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+    node.addEventListener('mouseenter', () => {
+      node.style.transform = node.style.transform.replace(/ scale\([0-9.]+\)/, '') + ' scale(1.1)';
+      const svg = node.querySelector('svg');
+      if (svg) {
+        svg.style.transform = 'rotate(10deg) scale(1.15)';
+        svg.style.transition = 'all 0.3s ease';
+      }
+    });
+    node.addEventListener('mouseleave', () => {
+      node.style.transform = node.style.transform.replace(/ scale\([0-9.]+\)/, '');
+      const svg = node.querySelector('svg');
+      if (svg) {
+        svg.style.transform = '';
+      }
+    });
+  });
+
+  // --- Lifecycle Interaction ---
+  const lifecycleNodes = document.querySelectorAll('#lifecycle .relative.z-10.flex-col.items-center');
+  const trackLine = document.querySelector('#lifecycle .absolute.h-\\[2px\\]');
+  
+  lifecycleNodes.forEach((node, index) => {
+    node.style.cursor = 'pointer';
+    node.addEventListener('mouseenter', () => {
+      const circle = node.querySelector('.w-12.h-12');
+      const header = node.querySelector('h4');
+      if (circle) {
+        circle.style.transform = 'scale(1.2)';
+        circle.style.boxShadow = '0 0 20px rgba(128, 0, 32, 0.3)';
+        circle.style.borderColor = '#0277BD';
+      }
+      if (header) {
+        header.style.color = '#0277BD';
+        header.style.transform = 'translateY(-2px)';
+        header.style.transition = 'all 0.3s ease';
+      }
+      if (trackLine) {
+        // Animate the track line up to this node
+        trackLine.style.width = `${(index / (lifecycleNodes.length - 1)) * 100}%`;
+        trackLine.style.transition = 'width 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+      }
+    });
+    node.addEventListener('mouseleave', () => {
+      const circle = node.querySelector('.w-12.h-12');
+      const header = node.querySelector('h4');
+      if (circle) {
+        circle.style.transform = '';
+        circle.style.boxShadow = '';
+        circle.style.borderColor = '';
+      }
+      if (header) {
+        header.style.color = '';
+        header.style.transform = '';
+      }
+      if (trackLine) {
+        trackLine.style.width = '75%'; // Default width
+      }
+    });
+  });
+});
+</script>
+{% endblock %}
+
+{% block footer %}{% endblock %}

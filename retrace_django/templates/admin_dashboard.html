@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6 font-sans">
+  
+  <!-- Header Banner -->
+  <div class="rounded-xl p-6 bg-zinc-900 border border-zinc-800">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-amber-400/10 border border-amber-400/20 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-display font-semibold text-xl text-zinc-100">
+              ReTrace Protocol Governance
+            </h1>
+            <span class="px-2 py-0.5 rounded bg-amber-400/10 text-amber-400 border border-amber-400/20 text-[10px] font-mono">
+              Root Admin
+            </span>
+          </div>
+          <p class="text-xs font-mono text-zinc-400 mt-0.5">
+            Immutable Audit Logs • Participating Hubs • Registry Health
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 font-mono text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        <span>Consensus: 100% Verified</span>
+      </div>
+    </div>
+
+    <!-- 8 Platform Statistics Metrics -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 mt-6 pt-5 border-t border-zinc-800 font-mono text-xs">
+      <div class="p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[9px] text-zinc-500 uppercase block">Total Products</span>
+        <span class="text-base font-bold text-zinc-100">{{ total_products }}</span>
+      </div>
+      <div class="p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[9px] text-zinc-500 uppercase block">Active Fleet</span>
+        <span class="text-base font-bold text-emerald-400">{{ active_products }}</span>
+      </div>
+      <div class="p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[9px] text-zinc-500 uppercase block">Verified Repairs</span>
+        <span class="text-base font-bold text-zinc-100">{{ total_verified_repairs }}</span>
+      </div>
+      <div class="p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[9px] text-zinc-500 uppercase block">Resales</span>
+        <span class="text-base font-bold text-zinc-100">{{ total_resales }}</span>
+      </div>
+      <div class="p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[9px] text-zinc-500 uppercase block">Recoveries</span>
+        <span class="text-base font-bold text-zinc-100">{{ total_recoveries }}</span>
+      </div>
+      <div class="p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[9px] text-zinc-500 uppercase block">Recycled</span>
+        <span class="text-base font-bold text-zinc-300">{{ total_recycled }}</span>
+      </div>
+      <div class="p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[9px] text-zinc-500 uppercase block">Repairers</span>
+        <span class="text-base font-bold text-amber-400">{{ repairers|length }}</span>
+      </div>
+      <div class="p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[9px] text-zinc-500 uppercase block">Recyclers</span>
+        <span class="text-base font-bold text-emerald-400">{{ recovery_partners|length }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex items-center gap-1.5 border-b border-zinc-800 pb-2 font-mono text-xs flex-wrap">
+    <button onclick="switchTab('approvals')" id="tab-btn-approvals" class="tab-btn px-3 py-1.5 rounded-md transition-colors cursor-pointer bg-zinc-800 text-zinc-100 font-semibold border border-zinc-700">
+      Pending Shop Verifications (<span id="pending-count">{{ pending_repairers|length }}</span>)
+    </button>
+    <button onclick="switchTab('overview')" id="tab-btn-overview" class="tab-btn px-3 py-1.5 rounded-md transition-colors cursor-pointer text-zinc-400 hover:text-zinc-200">
+      All Registered Passports ({{ products|length }})
+    </button>
+    <button onclick="switchTab('verifications')" id="tab-btn-verifications" class="tab-btn px-3 py-1.5 rounded-md transition-colors cursor-pointer text-zinc-400 hover:text-zinc-200">
+      Audit Ledger & Events ({{ ledger_events|length }})
+    </button>
+    <button onclick="switchTab('hubs')" id="tab-btn-hubs" class="tab-btn px-3 py-1.5 rounded-md transition-colors cursor-pointer text-zinc-400 hover:text-zinc-200">
+      Verified Hubs ({{ verified_hubs|length }})
+    </button>
+  </div>
+
+  <!-- Tab: Pending Shop Verifications -->
+  <div id="tab-approvals" class="tab-content space-y-4">
+    <div id="approvals-list" class="space-y-4">
+      {% if not pending_repairers %}
+      <div id="empty-approvals" class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-10 text-center text-zinc-500 font-mono text-xs">
+        No pending shop verification applications.
+      </div>
+      {% else %}
+        <div id="empty-approvals" class="hidden rounded-xl border border-zinc-800 bg-zinc-900/60 p-10 text-center text-zinc-500 font-mono text-xs">
+          No pending shop verification applications.
+        </div>
+        {% for r in pending_repairers %}
+        <div class="rounded-xl bg-zinc-900 border border-zinc-800 p-5 space-y-4 font-mono text-xs" id="shop-{{ r.id }}">
+          <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span class="text-amber-400 font-semibold uppercase tracking-wider">New Repair Shop Application</span>
+            </div>
+            <span class="text-zinc-500 text-[11px]">ID: {{ r.id }}</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+            <div class="md:col-span-3">
+              <img src="{% if r.avatar %}{{ r.avatar }}{% else %}https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=300{% endif %}" alt="" class="w-full h-36 rounded-lg object-cover border border-zinc-800" />
+              <div class="text-center text-[10px] text-zinc-500 mt-1">Storefront / Bench Workstation</div>
+            </div>
+
+            <div class="md:col-span-9 space-y-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <span class="text-zinc-500 text-[10px] uppercase block">Shop Name</span>
+                  <h3 class="font-display font-semibold text-base text-zinc-100">{{ r.name }}</h3>
+                </div>
+                <div>
+                  <span class="text-zinc-500 text-[10px] uppercase block">Owner / Lead Contact</span>
+                  <span class="text-zinc-200 text-xs font-medium">{{ r.ownerName }}</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <span class="text-zinc-500 text-[10px] uppercase block">Contact Channels</span>
+                  <div class="text-zinc-300 text-xs">{{ r.phone }}</div>
+                  <div class="text-amber-400 text-xs">{{ r.email }}</div>
+                </div>
+                <div>
+                  <span class="text-zinc-500 text-[10px] uppercase block">Bench Location</span>
+                  <div class="text-zinc-300 text-xs">{% if r.address %}{{ r.address }}{% else %}{{ r.location }}{% endif %}</div>
+                  <div class="text-zinc-500 text-[11px]">{{ r.city }}, {{ r.state }} - {{ r.pincode }}</div>
+                </div>
+              </div>
+
+              <div>
+                <span class="text-zinc-500 text-[10px] uppercase block mb-1">Services & Specializations</span>
+                <div class="flex flex-wrap gap-1.5">
+                  {% for cat in r.category %}
+                  <span class="px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700 text-[10px]">{{ cat }}</span>
+                  {% endfor %}
+                  {% for spec in r.specializations %}
+                  <span class="px-2 py-0.5 rounded bg-amber-400/10 text-amber-300 border border-amber-400/20 text-[10px]">{{ spec }}</span>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
+                  <span class="text-zinc-300 text-xs">ReTrace_Shop_Business_Registration_&_KYC.pdf</span>
+                </div>
+                <span class="text-emerald-400 text-[10px]">Validated Checksum ✓</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-3 border-t border-zinc-800">
+            <a href="/repairers/{{ r.id }}" class="text-xs text-zinc-400 hover:text-zinc-200 flex items-center gap-1 transition-colors">
+              <span>Inspect Public Profile</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+
+            <div class="flex items-center gap-2">
+              <button onclick="resolveShop('{{ r.id }}', 'REJECTED')" class="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-rose-500/10 hover:text-rose-400 text-zinc-400 border border-zinc-700 text-xs transition-colors cursor-pointer">
+                Reject
+              </button>
+              <button onclick="resolveShop('{{ r.id }}', 'VERIFIED')" class="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs transition-colors cursor-pointer flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                <span>Approve & Verify</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Tab: All Registered Passports -->
+  <div id="tab-overview" class="tab-content hidden rounded-xl border border-zinc-800 bg-zinc-900 overflow-hidden font-mono text-xs">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="bg-zinc-950/80 text-zinc-400 border-b border-zinc-800 text-[11px]">
+          <tr>
+            <th class="py-2.5 px-4">Product ID</th>
+            <th class="py-2.5 px-4">Device Model</th>
+            <th class="py-2.5 px-4">Category</th>
+            <th class="py-2.5 px-4">Condition</th>
+            <th class="py-2.5 px-4">Repairs</th>
+            <th class="py-2.5 px-4">Status</th>
+            <th class="py-2.5 px-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-800/80 text-zinc-300">
+          {% for p in products %}
+          <tr class="hover:bg-zinc-800/30 transition-colors">
+            <td class="py-2.5 px-4 text-amber-400 font-semibold">{{ p.productId }}</td>
+            <td class="py-2.5 px-4 text-zinc-200 font-medium">{{ p.brand }} {{ p.model }}</td>
+            <td class="py-2.5 px-4 text-zinc-400">{{ p.category }}</td>
+            <td class="py-2.5 px-4">{{ p.condition }}</td>
+            <td class="py-2.5 px-4 text-zinc-300">{{ p.verifiedRepairsCount }} Verified</td>
+            <td class="py-2.5 px-4">
+              <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">{{ p.lifecycleStatus }}</span>
+            </td>
+            <td class="py-2.5 px-4 text-right">
+              <a href="/passport/{{ p.productId }}" class="text-amber-400 hover:text-amber-300 text-xs font-medium inline-flex items-center gap-1 transition-colors">
+                <span>Passport</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab: Audit Ledger & Events -->
+  <div id="tab-verifications" class="tab-content hidden space-y-2.5 font-mono text-xs">
+    {% for evt in ledger_events %}
+    <div class="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-amber-400 font-semibold">{{ evt.productId }}</span>
+          <span class="text-zinc-600">•</span>
+          <span class="text-zinc-200 font-medium">{{ evt.title }}</span>
+          <span class="px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 text-[10px]">
+            {{ evt.verificationLevel }}
+          </span>
+        </div>
+        <p class="text-zinc-400 text-[11px]">{{ evt.description }}</p>
+      </div>
+
+      <div class="text-right text-[11px] text-zinc-500 flex-shrink-0">
+        <div>Logged by: {{ evt.actorName }}</div>
+        <div>{{ evt.timestamp }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Tab: Verified Hubs -->
+  <div id="tab-hubs" class="tab-content hidden grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-xs">
+    <div id="verified-hubs-list" class="contents">
+      {% for r in verified_repairers %}
+      <div class="p-4 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <h4 class="text-zinc-100 font-semibold">{{ r.name }}</h4>
+            <span class="text-[10px] text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">Repair Hub</span>
+          </div>
+          <p class="text-zinc-400 text-[11px] mt-1">{% if r.address %}{{ r.address }}{% else %}{{ r.location }}{% endif %}</p>
+          <div class="text-amber-400 text-[10px] mt-0.5">Rating: {% if r.rating > 0 %}{{ r.rating }}{% else %}New{% endif %} ★</div>
+        </div>
+        <span class="px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px]">Active</span>
+      </div>
+      {% endfor %}
+
+      {% for rp in recovery_partners %}
+      <div class="p-4 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <h4 class="text-zinc-100 font-semibold">{{ rp.name }}</h4>
+            <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Recycler</span>
+          </div>
+          <p class="text-zinc-400 text-[11px] mt-1">{{ rp.location }}</p>
+          <div class="text-zinc-400 text-[10px] mt-0.5">{{ rp.typeLabel }}</div>
+        </div>
+        <span class="px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px]">R2v3 Verified</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let pendingCount = {{ pending_repairers|length }};
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(el => {
+      el.classList.remove('bg-zinc-800', 'text-zinc-100', 'font-semibold', 'border', 'border-zinc-700');
+      el.classList.add('text-zinc-400');
+    });
+    
+    document.getElementById(`tab-${tab}`).classList.remove('hidden');
+    
+    const activeBtn = document.getElementById(`tab-btn-${tab}`);
+    activeBtn.classList.remove('text-zinc-400');
+    activeBtn.classList.add('bg-zinc-800', 'text-zinc-100', 'font-semibold', 'border', 'border-zinc-700');
+  }
+
+  function resolveShop(id, decision) {
+    const card = document.getElementById(`shop-${id}`);
+    if(card) {
+      card.remove();
+      pendingCount--;
+      document.getElementById('pending-count').innerText = pendingCount;
+      if (pendingCount === 0) {
+        document.getElementById('empty-approvals').classList.remove('hidden');
+      }
+
+      if(decision === 'VERIFIED') {
+        // Move to verified hubs visually
+        const html = `
+        <div class="p-4 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between animate-in fade-in">
+          <div>
+            <div class="flex items-center gap-2">
+              <h4 class="text-zinc-100 font-semibold">Newly Verified Hub</h4>
+              <span class="text-[10px] text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">Repair Hub</span>
+            </div>
+            <p class="text-zinc-400 text-[11px] mt-1">Pending Sync</p>
+            <div class="text-amber-400 text-[10px] mt-0.5">Rating: New ★</div>
+          </div>
+          <span class="px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px]">Active</span>
+        </div>
+        `;
+        document.getElementById('verified-hubs-list').insertAdjacentHTML('beforeend', html);
+      }
+    }
+  }
+</script>
+{% endblock %}

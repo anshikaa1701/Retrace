@@ -1,0 +1,85 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ShieldCheck, ArrowLeft, FileText, CheckCircle2 } from 'lucide-react';
+
+export const TermsPage: React.FC = () => {
+  return (
+    <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-12 font-sans select-none">
+      
+      {/* Header */}
+      <div className="space-y-4">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-colors"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Home</span>
+        </Link>
+
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-xs font-mono text-amber-400">
+            <FileText className="w-3.5 h-3.5" />
+            <span>PROTOCOL TERMS</span>
+          </div>
+          <h1 className="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight">
+            Terms of Service
+          </h1>
+          <p className="text-zinc-400 text-xs sm:text-sm font-mono">
+            Last Updated: September 2026 • ReTrace Governance Standards
+          </p>
+        </div>
+      </div>
+
+      {/* Main Terms Content */}
+      <div className="p-8 sm:p-10 rounded-3xl bg-zinc-900/80 border border-zinc-800 space-y-8 text-zinc-300 text-sm leading-relaxed">
+        
+        <section className="space-y-2">
+          <h2 className="font-display font-bold text-lg text-white">
+            1. Agreement to Terms
+          </h2>
+          <p className="text-zinc-400 text-xs sm:text-sm">
+            By interacting with ReTrace, minting a digital product passport, using our AI diagnostic assistant, or registering as a verified repairer or recycler, you agree to comply with these Terms of Service.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-display font-bold text-lg text-white">
+            2. Product Passport Minting & Authenticity
+          </h2>
+          <p className="text-zinc-400 text-xs sm:text-sm">
+            You agree to register only authentic hardware devices in your legal possession or custody. Attempting to generate fraudulent serial hashes, roll back diagnostic telemetry, or spoof battery cycle degradation is strictly prohibited.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-display font-bold text-lg text-white">
+            3. Verified Technician Responsibilities
+          </h2>
+          <p className="text-zinc-400 text-xs sm:text-sm">
+            Repairers bearing the &ldquo;✓ ReTrace Verified&rdquo; credential warrant that all replacement components adhere to OEM or certified tier-1 standards, and provide customers with a minimum 90-day parts warranty. All completed services must be truthfully signed to the product passport.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-display font-bold text-lg text-white">
+            4. Circular Resale & Recovery Commitments
+          </h2>
+          <p className="text-zinc-400 text-xs sm:text-sm">
+            Sellers on the circular marketplace guarantee that listed condition ratings reflect true hardware state. Partner recyclers guarantee zero-landfill disposal, adhering to R2v3 and e-Stewards hydrometallurgical extraction standards.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="font-display font-bold text-lg text-white">
+            5. Limitation of Liability
+          </h2>
+          <p className="text-zinc-400 text-xs sm:text-sm">
+            ReTrace AI diagnostic guidance is provided for technical education and troubleshooting assistance. For high-risk electrical or thermal faults, users must always follow safety recommendations and engage professional repairers.
+          </p>
+        </section>
+
+      </div>
+
+    </div>
+  );
+};

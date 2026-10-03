@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6 font-sans">
+  
+  <!-- Universal Quick Role Switcher Bar -->
+  <div class="p-2 sm:p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-2 pl-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      <span class="font-mono text-xs text-zinc-400 uppercase tracking-wider">
+        Active Role: <strong class="text-zinc-200">{{ current_user.role }}</strong>
+      </span>
+    </div>
+
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <!-- Owner -->
+      <button onclick="alert('Role switching is handled in the Django backend (Placeholder)')" class="px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors flex items-center gap-1.5 cursor-pointer {% if current_user.role == 'OWNER' %}bg-amber-400 text-zinc-950 font-semibold{% else %}bg-zinc-800/60 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 border border-zinc-700/60{% endif %}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>OWNER</span>
+      </button>
+      <!-- Repairer -->
+      <button onclick="alert('Role switching is handled in the Django backend (Placeholder)')" class="px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors flex items-center gap-1.5 cursor-pointer bg-zinc-800/60 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 border border-zinc-700/60">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>REPAIRER</span>
+      </button>
+      <!-- Recycler -->
+      <button onclick="alert('Role switching is handled in the Django backend (Placeholder)')" class="px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors flex items-center gap-1.5 cursor-pointer bg-zinc-800/60 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 border border-zinc-700/60">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.09-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633-4.512-1.208 1.208-4.512"/></svg>
+        <span>RECYCLER</span>
+      </button>
+      <!-- Admin -->
+      <button onclick="alert('Role switching is handled in the Django backend (Placeholder)')" class="px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors flex items-center gap-1.5 cursor-pointer bg-zinc-800/60 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 border border-zinc-700/60">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 12 2 2 4-4"/><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>ADMIN</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Header Banner -->
+  <div class="rounded-xl p-5 sm:p-6 bg-zinc-900 border border-zinc-800 space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-700 mb-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span>Owner Portal</span>
+        </div>
+        <h1 class="font-display font-bold text-2xl sm:text-3xl text-zinc-100">
+          Welcome back, {{ current_user.name }}
+        </h1>
+        <p class="text-xs font-mono text-zinc-400 mt-1">
+          Account: {{ current_user.email }} • Hardware assets under management
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <a href="/scan" class="px-3.5 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs font-mono text-zinc-200 hover:text-white border border-zinc-700 flex items-center gap-1.5 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/><rect x="3" y="16" width="5" height="5" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+          <span>Scan QR</span>
+        </a>
+
+        <a href="/products/new" class="px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono text-xs font-semibold flex items-center gap-1.5 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          <span>Register Product</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Top 5 Metrics Strip -->
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-5 border-t border-zinc-800 font-mono">
+      <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[10px] text-zinc-400 uppercase block">Registered Products</span>
+        <span class="text-xl font-bold text-zinc-100">{{ total_products }}</span>
+      </div>
+
+      <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[10px] text-zinc-400 uppercase block">Active Repairs</span>
+        <span class="text-xl font-bold text-amber-400">{{ active_repairs_count }}</span>
+      </div>
+
+      <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[10px] text-zinc-400 uppercase block">Verified Repairs</span>
+        <span class="text-xl font-bold text-emerald-400">{{ total_verified_repairs }}</span>
+      </div>
+
+      <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[10px] text-zinc-400 uppercase block">Products Resold</span>
+        <span class="text-xl font-bold text-zinc-200">{{ resold_products_count }}</span>
+      </div>
+
+      <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[10px] text-zinc-400 uppercase block">Recovered</span>
+        <span class="text-xl font-bold text-zinc-200">{{ recovered_products_count }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 Prominent Actions -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    
+    <!-- 1. ADD PRODUCT -->
+    <div class="rounded-xl p-5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors flex flex-col justify-between space-y-4">
+      <div class="space-y-2">
+        <div class="w-8 h-8 rounded-lg bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-400">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-base text-zinc-100">
+          Register Hardware
+        </h3>
+        <p class="text-xs text-zinc-400 leading-relaxed font-mono">
+          Register a device manually and issue its decentralized digital passport.
+        </p>
+      </div>
+
+      <a href="/products/new" class="w-full py-2 px-3 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors">
+        <span>+ Register New Device</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <!-- 2. SCAN RETRACE QR -->
+    <div class="rounded-xl p-5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors flex flex-col justify-between space-y-4">
+      <div class="space-y-2">
+        <div class="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/><rect x="3" y="16" width="5" height="5" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-base text-zinc-100">
+          Scan ReTrace QR
+        </h3>
+        <p class="text-xs text-zinc-400 leading-relaxed font-mono">
+          Inspect an existing passport via physical or digital QR code.
+        </p>
+      </div>
+
+      <a href="/scan" class="w-full py-2 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono font-medium text-xs flex items-center justify-center gap-1.5 border border-zinc-700 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/><rect x="3" y="16" width="5" height="5" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+        <span>Open QR Scanner</span>
+      </a>
+    </div>
+
+    <!-- 3. ENTER PRODUCT ID -->
+    <div class="rounded-xl p-5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors flex flex-col justify-between space-y-4">
+      <div class="space-y-2">
+        <div class="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </div>
+        <h3 class="font-display font-semibold text-base text-zinc-100">
+          Lookup by ID
+        </h3>
+        <p class="text-xs text-zinc-400 leading-relaxed font-mono">
+          Direct lookup by ReTrace identifier (e.g. RP-DL-72891).
+        </p>
+      </div>
+
+      <form onsubmit="event.preventDefault(); const t = this.elements['idInput'].value.trim(); if(t) window.location.href='/passport/'+t.toUpperCase();" class="flex items-center gap-2">
+        <input name="idInput" type="text" placeholder="RP-DL-72891" class="flex-1 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-700 text-zinc-100 font-mono text-xs focus:border-amber-400 focus:outline-none uppercase" />
+        <button type="submit" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-amber-400 hover:text-zinc-950 text-zinc-200 font-mono text-xs font-medium border border-zinc-700 transition-colors cursor-pointer">
+          Find
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Products Fleet Grid -->
+  <div class="space-y-4">
+    <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+      <div>
+        <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">
+          Fleet Overview
+        </span>
+        <h2 class="font-display font-bold text-lg text-zinc-100">
+          My Registered Devices
+        </h2>
+      </div>
+
+      <span class="text-xs font-mono text-zinc-400">
+        {{ total_products }} Active Passports
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for product in products %}
+      <div class="rounded-xl p-5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors flex flex-col justify-between group">
+        <div>
+          <!-- Header row -->
+          <div class="flex items-center justify-between gap-2 mb-2.5">
+            <span class="font-mono text-xs font-semibold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+              {{ product.productId }}
+            </span>
+            
+            <!-- Status Badge implementation inline -->
+            {% if product.lifecycleStatus == 'ACTIVE' %}
+            <span class="inline-flex items-center gap-1.5 rounded-full font-mono uppercase bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 text-xs">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              Active
+            </span>
+            {% elif product.lifecycleStatus == 'IN_REPAIR' %}
+            <span class="inline-flex items-center gap-1.5 rounded-full font-mono uppercase bg-amber-500/10 border border-amber-500/30 text-amber-400 px-2 py-0.5 text-xs">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+              In Repair
+            </span>
+            {% elif product.lifecycleStatus == 'RESOLD' %}
+            <span class="inline-flex items-center gap-1.5 rounded-full font-mono uppercase bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-2 py-0.5 text-xs">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+              Resold
+            </span>
+            {% elif product.lifecycleStatus == 'END_OF_LIFE' or product.lifecycleStatus == 'RECYCLED' %}
+            <span class="inline-flex items-center gap-1.5 rounded-full font-mono uppercase bg-zinc-500/10 border border-zinc-500/30 text-zinc-400 px-2 py-0.5 text-xs">
+              End of Life
+            </span>
+            {% else %}
+            <span class="inline-flex items-center gap-1 rounded-full font-mono uppercase bg-zinc-800 text-zinc-400 px-2 py-0.5 text-xs">
+              {{ product.lifecycleStatus }}
+            </span>
+            {% endif %}
+          </div>
+
+          <!-- Device Title -->
+          <span class="text-[11px] font-mono text-zinc-400 uppercase block">
+            {{ product.brand }} • {{ product.category }}
+          </span>
+          <h3 class="font-display font-semibold text-base text-zinc-100 group-hover:text-amber-400 transition-colors mb-2">
+            {{ product.model }}
+          </h3>
+
+          <!-- Badges strip -->
+          <div class="flex flex-wrap items-center gap-1.5 mb-3.5">
+            {% if product.condition == 'EXCELLENT' %}
+            <span class="px-2.5 py-1 text-xs font-mono font-medium rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">EXCELLENT CONDITION</span>
+            {% elif product.condition == 'GOOD' %}
+            <span class="px-2.5 py-1 text-xs font-mono font-medium rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">GOOD CONDITION</span>
+            {% elif product.condition == 'FAIR' %}
+            <span class="px-2.5 py-1 text-xs font-mono font-medium rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">FAIR CONDITION</span>
+            {% elif product.condition == 'DAMAGED' %}
+            <span class="px-2.5 py-1 text-xs font-mono font-medium rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">DAMAGED</span>
+            {% else %}
+            <span class="px-2.5 py-1 text-xs font-mono font-medium rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">{{ product.condition }}</span>
+            {% endif %}
+            
+            <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-700">
+              {{ product.verifiedRepairsCount }} verified repairs
+            </span>
+          </div>
+
+          <!-- Specs snapshot -->
+          <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800/80 font-mono text-[11px] text-zinc-300 space-y-1 mb-4">
+            <div class="flex justify-between">
+              <span class="text-zinc-400">Repairability:</span>
+              <span class="text-emerald-400 font-semibold">{{ product.repairabilityScore }} / 10</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-zinc-400">Est. Resale:</span>
+              <span class="text-zinc-200">₹{{ product.estimatedResaleMin }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-zinc-400">Registered:</span>
+              <span class="text-zinc-400">{{ product.purchaseDate }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-zinc-800">
+          <a href="/passport/{{ product.productId }}" class="py-1.5 px-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 hover:text-white font-mono text-xs font-medium flex items-center justify-center gap-1.5 transition-colors text-center">
+            <span>Passport</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+
+          <a href="/ai-assistant?code={{ product.productId }}&prompt=overheating" class="py-1.5 px-3 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 font-mono text-xs font-medium flex items-center justify-center gap-1.5 transition-colors text-center border border-zinc-800">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+            <span>Ask AI</span>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

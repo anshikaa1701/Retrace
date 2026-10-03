@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-10 font-sans">
+  
+  <!-- Top Navigation -->
+  <div class="flex items-center justify-between">
+    <a href="/repairers" class="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      <span>Back to Directory</span>
+    </a>
+
+    <div class="flex items-center gap-2">
+      {% if repairer.verificationStatus == 'VERIFIED' %}
+      <span class="px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-medium flex items-center gap-1.5">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>✓ ReTrace Verified</span>
+      </span>
+      {% else %}
+      <span class="px-2.5 py-1 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs font-mono flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+        <span>Pending Verification</span>
+      </span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Main Profile Showcase Card -->
+  <div class="rounded-xl bg-zinc-900 border border-zinc-800 p-6 sm:p-8 space-y-6">
+    
+    <!-- Hero Header -->
+    <div class="flex flex-col md:flex-row items-start md:items-center gap-6 border-b border-zinc-800 pb-6">
+      
+      <!-- Shop Photo -->
+      <div class="relative flex-shrink-0">
+        <img
+          src="{% if repairer.avatar %}{{ repairer.avatar }}{% else %}https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=500&auto=format&fit=crop&q=80{% endif %}"
+          alt="{{ repairer.name }}"
+          class="w-28 h-28 sm:w-32 sm:h-32 rounded-xl object-cover border border-zinc-800"
+        />
+        {% if repairer.verificationStatus == 'VERIFIED' %}
+        <div class="absolute -bottom-2 -right-2 px-2 py-0.5 rounded bg-emerald-500 text-zinc-950 font-mono font-semibold text-[10px] flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span>Verified</span>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Core Info -->
+      <div class="space-y-2 flex-1">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="font-mono text-[11px] text-amber-400 font-semibold px-2 py-0.5 rounded bg-amber-400/10 border border-amber-400/20">
+            Active Workshop
+          </span>
+          <span class="font-mono text-xs text-zinc-400 flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>{% if repairer.city %}{{ repairer.city }}{% else %}{{ repairer.location }}{% endif %}</span>
+          </span>
+          <span class="font-mono text-xs text-zinc-500">
+            • {% if repairer.experienceYears %}{{ repairer.experienceYears }}{% else %}6{% endif %} Years Experience
+          </span>
+        </div>
+
+        <h1 class="font-display font-semibold text-2xl sm:text-3xl text-zinc-100 tracking-tight">
+          {{ repairer.name }}
+        </h1>
+
+        <p class="font-mono text-xs text-amber-400 font-medium">
+          {{ repairer.specialty }}
+        </p>
+
+        <div class="flex items-center gap-3 pt-1 flex-wrap font-mono text-xs">
+          <div class="flex items-center gap-1.5 text-amber-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fill-amber-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span class="font-bold text-zinc-100">
+              {% if repairer.rating > 0 %}{{ repairer.rating }}{% else %}New{% endif %}
+            </span>
+            <span class="text-zinc-500 text-xs">
+              ({{ repairer.reviewCount }} reviews)
+            </span>
+          </div>
+
+          <div class="text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+            {{ repairer.completedRepairs }} Completed ReTrace Repairs
+          </div>
+        </div>
+
+        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed pt-1">
+          {{ repairer.description }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Action Buttons Strip -->
+    <div class="flex flex-col sm:flex-row items-center gap-3">
+      <button onclick="alert('Repair Request Modal (Placeholder)')" class="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>Request Repair</span>
+      </button>
+
+      <button onclick="document.getElementById('location-modal').classList.remove('hidden')" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700/80 text-zinc-200 font-mono text-xs font-medium border border-zinc-700 flex items-center justify-center gap-2 transition-colors cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-400"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>View Location</span>
+      </button>
+
+      <button onclick="toggleReviewForm()" id="review-toggle-btn" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-zinc-800/60 hover:bg-zinc-800 text-zinc-300 hover:text-zinc-100 font-mono text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer ml-auto border border-zinc-700/60">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Rate & Review</span>
+      </button>
+    </div>
+
+    <!-- Review Submission Accordion -->
+    <form id="review-form" onsubmit="submitReview(event)" class="hidden p-5 rounded-xl bg-zinc-950/60 border border-zinc-800 space-y-4">
+      <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+        <div class="font-display font-semibold text-zinc-100 text-sm">
+          Submit Verified Customer Review
+        </div>
+        <span class="text-[10px] font-mono text-zinc-500">Audited Digital Rating</span>
+      </div>
+
+      <div id="review-success" class="hidden p-3.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono text-xs text-center">
+        ✓ Review submitted successfully! Top Repairers rank score updated.
+      </div>
+
+      <div id="review-inputs">
+        <div class="flex items-center gap-4 mb-4">
+          <span class="text-xs font-mono text-zinc-400">Rating:</span>
+          <div class="flex items-center gap-1" id="star-rating">
+            <button type="button" onclick="setRating(1)" class="p-1 cursor-pointer"><svg class="w-5 h-5 transition-colors fill-amber-400 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button type="button" onclick="setRating(2)" class="p-1 cursor-pointer"><svg class="w-5 h-5 transition-colors fill-amber-400 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button type="button" onclick="setRating(3)" class="p-1 cursor-pointer"><svg class="w-5 h-5 transition-colors fill-amber-400 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button type="button" onclick="setRating(4)" class="p-1 cursor-pointer"><svg class="w-5 h-5 transition-colors fill-amber-400 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button type="button" onclick="setRating(5)" class="p-1 cursor-pointer"><svg class="w-5 h-5 transition-colors fill-amber-400 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+          </div>
+          <span class="font-mono text-xs font-semibold text-amber-400" id="rating-display">5.0 ★</span>
+        </div>
+
+        <div class="space-y-1.5 mb-4">
+          <label class="text-xs font-mono text-zinc-400">Your Verified Work Experience</label>
+          <textarea id="review-text" rows="3" required placeholder="Describe the diagnostics, replacement parts, turnaround time, and ReTrace passport experience..." class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-100 text-xs font-sans focus:border-zinc-600 focus:outline-none resize-none"></textarea>
+        </div>
+
+        <div class="flex justify-end">
+          <button type="submit" class="px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono font-semibold text-xs flex items-center gap-2 cursor-pointer transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <span>Post Verified Review</span>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- SERVICES OFFERED -->
+    <div class="space-y-2.5 pt-4 border-t border-zinc-800">
+      <h3 class="font-mono text-xs text-zinc-400 font-semibold uppercase tracking-wider">Services Offered</h3>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        {% for srv in repairer.services %}
+        <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800/80 text-xs font-mono text-zinc-300 flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+          <span>{{ srv }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- BRAND SPECIALIZATIONS -->
+    <div class="space-y-2.5 pt-4 border-t border-zinc-800">
+      <h3 class="font-mono text-xs text-zinc-400 font-semibold uppercase tracking-wider">Brand Specializations</h3>
+      <div class="flex flex-wrap gap-2">
+        {% for spec in repairer.specializations %}
+        <span class="px-3 py-1.5 rounded-md bg-zinc-950/60 text-zinc-300 border border-zinc-800 text-xs font-mono">
+          {{ spec }} Authorized Protocols
+        </span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- OPENING HOURS -->
+    <div class="space-y-2.5 pt-4 border-t border-zinc-800">
+      <h3 class="font-mono text-xs text-zinc-400 font-semibold uppercase tracking-wider">Opening Hours</h3>
+      <div class="flex items-center gap-3 p-3.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80 text-xs font-mono">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400 flex-shrink-0"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <div>
+          <div class="text-zinc-200 font-medium">{% if repairer.openingHours %}{{ repairer.openingHours }}{% else %}10:00 AM – 8:00 PM{% endif %}</div>
+          <div class="text-zinc-500 text-[11px] mt-0.5">
+            Status: <strong class="text-emerald-400 font-medium">{% if repairer.availability %}{{ repairer.availability }}{% else %}OPEN{% endif %}</strong> • Response Time: {% if repairer.responseTime %}{{ repairer.responseTime }}{% else %}&lt; 1 hour{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="space-y-3 pt-4 border-t border-zinc-800">
+      <div class="flex items-center justify-between">
+        <h3 class="font-mono text-xs text-zinc-400 font-semibold uppercase tracking-wider">
+          Verified Customer Reviews ({{ reviews|length }})
+        </h3>
+        <span class="text-[10px] font-mono text-zinc-500">Immutably tied to repair work orders</span>
+      </div>
+
+      <div class="space-y-2.5" id="reviews-list">
+        {% if not reviews %}
+        <div class="p-6 rounded-lg bg-zinc-950/40 border border-zinc-800/80 text-center text-zinc-500 font-mono text-xs">
+          No reviews logged yet. Be the first to rate this workshop.
+        </div>
+        {% else %}
+          {% for rev in reviews %}
+          <div class="p-3.5 rounded-lg bg-zinc-950/50 border border-zinc-800/80 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="font-display font-medium text-zinc-200 text-xs">{{ rev.ownerName }}</span>
+                {% if rev.verified %}
+                <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                  ✓ Verified Customer
+                </span>
+                {% endif %}
+              </div>
+              <div class="flex items-center gap-1 text-amber-400 text-xs font-mono">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fill-amber-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>{{ rev.rating }}.0</span>
+              </div>
+            </div>
+            <p class="text-xs text-zinc-300 font-sans leading-relaxed">"{{ rev.review }}"</p>
+            <div class="text-[10px] font-mono text-zinc-500">
+              {{ rev.createdAt }}
+            </div>
+          </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Location Modal -->
+  <div id="location-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/80 backdrop-blur-sm">
+    <div class="w-full max-w-md rounded-xl bg-zinc-900 border border-zinc-800 p-6 space-y-5 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+        <div class="font-display font-semibold text-zinc-100 text-base">Shop Location & Address</div>
+        <button onclick="document.getElementById('location-modal').classList.add('hidden')" class="text-zinc-500 hover:text-zinc-200 font-mono text-sm cursor-pointer">✕</button>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs">
+        <div class="p-3.5 rounded-lg bg-zinc-950/60 border border-zinc-800 space-y-1">
+          <div class="text-amber-400 font-semibold">{{ repairer.name }}</div>
+          <div class="text-zinc-300">{% if repairer.address %}{{ repairer.address }}{% else %}{{ repairer.location }}{% endif %}</div>
+          <div class="text-zinc-500 text-[11px]">{{ repairer.city }}, {{ repairer.state }} - {{ repairer.pincode }}</div>
+        </div>
+
+        <div class="h-40 rounded-lg bg-zinc-950 border border-zinc-800 relative overflow-hidden flex items-center justify-center">
+          <div class="w-16 h-16 rounded-full border border-amber-400/20 animate-ping absolute"></div>
+          <div class="flex flex-col items-center relative z-10">
+            <div class="w-7 h-7 rounded-full bg-amber-400 flex items-center justify-center text-zinc-950 font-bold text-xs">TF</div>
+            <span class="text-[10px] text-zinc-300 font-medium mt-1">{{ repairer.name }}</span>
+          </div>
+          <div class="absolute bottom-2 left-3 text-[9px] text-zinc-500">
+            LAT: {% if repairer.latitude %}{{ repairer.latitude }}{% else %}26.8467{% endif %} • LNG: {% if repairer.longitude %}{{ repairer.longitude }}{% else %}80.9462{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <button onclick="document.getElementById('location-modal').classList.add('hidden')" class="w-full py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700/80 text-zinc-200 font-mono text-xs font-medium cursor-pointer transition-colors">
+        Close
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentRating = 5;
+
+  function toggleReviewForm() {
+    const form = document.getElementById('review-form');
+    const btn = document.getElementById('review-toggle-btn');
+    if (form.classList.contains('hidden')) {
+      form.classList.remove('hidden');
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>Close Review Form</span>`;
+    } else {
+      form.classList.add('hidden');
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>Rate & Review</span>`;
+    }
+  }
+
+  function setRating(val) {
+    currentRating = val;
+    document.getElementById('rating-display').innerText = `${val}.0 ★`;
+    const buttons = document.querySelectorAll('#star-rating button svg');
+    buttons.forEach((svg, idx) => {
+      if (idx < val) {
+        svg.classList.add('fill-amber-400', 'text-amber-400');
+        svg.classList.remove('text-zinc-700');
+      } else {
+        svg.classList.remove('fill-amber-400', 'text-amber-400');
+        svg.classList.add('text-zinc-700');
+      }
+    });
+  }
+
+  function submitReview(e) {
+    e.preventDefault();
+    const text = document.getElementById('review-text').value;
+    if (!text.trim()) return;
+    
+    document.getElementById('review-inputs').classList.add('hidden');
+    document.getElementById('review-success').classList.remove('hidden');
+    
+    // Add review to list (client side fake)
+    const list = document.getElementById('reviews-list');
+    const newHtml = `
+      <div class="p-3.5 rounded-lg bg-zinc-950/50 border border-zinc-800/80 space-y-1.5 animate-in fade-in">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="font-display font-medium text-zinc-200 text-xs">Avi Sharma (You)</span>
+            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">✓ Verified Customer</span>
+          </div>
+          <div class="flex items-center gap-1 text-amber-400 text-xs font-mono">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fill-amber-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>${currentRating}.0</span>
+          </div>
+        </div>
+        <p class="text-xs text-zinc-300 font-sans leading-relaxed">"${text}"</p>
+        <div class="text-[10px] font-mono text-zinc-500">Just now</div>
+      </div>
+    `;
+    
+    // If it currently says "No reviews", empty it first
+    if(list.innerText.includes('No reviews logged yet')) {
+      list.innerHTML = '';
+    }
+    
+    list.insertAdjacentHTML('afterbegin', newHtml);
+    
+    setTimeout(() => {
+      toggleReviewForm();
+      document.getElementById('review-inputs').classList.remove('hidden');
+      document.getElementById('review-success').classList.add('hidden');
+      document.getElementById('review-text').value = '';
+    }, 2000);
+  }
+</script>
+{% endblock %}

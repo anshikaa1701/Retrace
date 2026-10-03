@@ -1,0 +1,1 @@
+HTTPSConnectionPool(host='api.elevenlabs.io', port=443): Max retries exceeded with url: /v1/text-to-speech/EXAVITQu4vr4xnSDxMaL (Caused by NameResolutionError("HTTPSConnection(host='api.elevenlabs.io', port=443): Failed to resolve 'api.elevenlabs.io' ([Errno 11001] getaddrinfo failed)"))

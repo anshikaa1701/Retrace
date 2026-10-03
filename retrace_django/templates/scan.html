@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto font-sans select-none space-y-8">
+  
+  <!-- Title & Concept Clarification -->
+  <div class="text-center space-y-2">
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-300 font-mono text-xs">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg>
+      <span>QR Scanner & Passport Resolver</span>
+    </div>
+
+    <h1 class="font-display font-semibold text-2xl sm:text-3xl text-zinc-100 tracking-tight">
+      Scan ReTrace QR Code
+    </h1>
+
+    <p class="text-zinc-400 text-xs sm:text-sm max-w-lg mx-auto">
+      Scan the physical QR identifier attached to your product to open its verifiable digital passport.
+    </p>
+  </div>
+
+  <!-- Main Scanner Container -->
+  <div class="rounded-xl p-6 sm:p-8 bg-zinc-900 border border-zinc-800 text-center max-w-2xl mx-auto">
+    
+    <!-- IDLE STATE -->
+    <div id="scan-state-idle" class="space-y-6">
+      <!-- Viewfinder Frame -->
+      <div class="relative mx-auto w-56 h-56 sm:w-64 sm:h-64 rounded-xl bg-zinc-950 border border-zinc-800 flex flex-col items-center justify-center overflow-hidden">
+        <!-- Corner targeting reticles -->
+        <div class="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-amber-400"></div>
+        <div class="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-amber-400"></div>
+        <div class="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-amber-400"></div>
+        <div class="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-amber-400"></div>
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500 mb-2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+        <span class="font-mono text-xs text-zinc-300 font-medium">Align QR Code in Frame</span>
+        <span class="font-mono text-[10px] text-zinc-500 mt-0.5">Optical Decoder Active</span>
+      </div>
+
+      <!-- Quick Trigger Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-2.5">
+        <button onclick="handleTriggerScan('RP-DL-72891')" class="w-full sm:w-auto px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono font-semibold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+          <span>Simulate Camera Scan (Dell Inspiron 15)</span>
+        </button>
+
+        <button onclick="handleTriggerScan('RP-UNREGISTERED-000')" class="w-full sm:w-auto px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700/80 text-zinc-300 font-mono text-xs border border-zinc-700 transition-colors cursor-pointer">
+          <span>Test Unregistered Code</span>
+        </button>
+      </div>
+
+      <!-- Manual ReTrace Product ID Search -->
+      <div class="pt-5 border-t border-zinc-800 space-y-2.5">
+        <div class="flex items-center justify-center gap-1.5 text-zinc-400 font-mono text-xs">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span>Or enter ReTrace Product ID manually</span>
+        </div>
+
+        <form id="manual-scan-form" class="flex items-center gap-2 max-w-sm mx-auto" onsubmit="event.preventDefault(); handleTriggerScan(document.getElementById('product-id-input').value);">
+          <input type="text" id="product-id-input" placeholder="e.g. RP-DL-72891" class="flex-1 px-3 py-1.5 bg-zinc-950/60 border border-zinc-800 rounded-md text-zinc-200 font-mono text-xs focus:border-zinc-600 focus:outline-none uppercase" />
+          <button type="submit" class="px-3.5 py-1.5 rounded-md bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1">
+            <span>Lookup</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- NOT FOUND STATE -->
+    <div id="scan-state-not-found" class="hidden py-6 space-y-5">
+      <div class="w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/20 mx-auto flex items-center justify-center text-rose-400">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+
+      <div class="space-y-1.5">
+        <h3 class="font-display font-semibold text-xl text-zinc-100">Product Not Found</h3>
+        <p class="text-zinc-400 font-mono text-xs max-w-md mx-auto leading-relaxed">
+          The identifier <strong id="not-found-code" class="text-rose-400"></strong> is not registered in the ReTrace decentralized passport network.
+        </p>
+      </div>
+
+      <!-- Callout: Add Product Manually -->
+      <div class="p-4 rounded-xl bg-zinc-950/60 border border-zinc-800 max-w-md mx-auto space-y-2.5">
+        <div class="text-xs font-mono text-zinc-300">Need to register this device?</div>
+        <a href="/products/new" class="w-full py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          <span>Register This Product</span>
+        </a>
+      </div>
+
+      <div class="pt-1">
+        <button onclick="resetScan()" class="text-xs font-mono text-zinc-400 hover:text-zinc-200 underline cursor-pointer">
+          &larr; Scan Another QR Code
+        </button>
+      </div>
+    </div>
+
+    <!-- SCANNING & VERIFICATION STATES -->
+    <div id="scan-state-loading" class="hidden py-8 space-y-4">
+      <div class="w-16 h-16 mx-auto rounded-full bg-zinc-950 border border-zinc-800 flex items-center justify-center">
+        <!-- Scanning Icon -->
+        <svg id="icon-scanning" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400 animate-spin hidden"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        
+        <!-- Found Icon -->
+        <svg id="icon-found" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-100 hidden"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+
+        <!-- Verified Icon -->
+        <svg id="icon-verified" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400 hidden"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+
+      <div class="space-y-1 font-mono">
+        <div class="text-[11px] text-zinc-500 uppercase tracking-wider">Resolving ReTrace Passport</div>
+        <div id="loading-title" class="font-display font-semibold text-lg text-zinc-100">Scanning optical pattern...</div>
+        <p id="loading-desc" class="text-xs text-zinc-400">Resolving Product ID from registry...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Existing Registered Demo Presets -->
+  <div class="text-center space-y-3 max-w-2xl mx-auto">
+    <span class="text-xs font-mono text-zinc-500 uppercase tracking-wider block">Registered demo passports:</span>
+    <div class="flex flex-wrap items-center justify-center gap-2">
+      <!-- Demo Presets will be hardcoded here for the scan page -->
+      <button onclick="handleTriggerScan('RP-DL-72891')" class="px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-700 text-left transition-colors font-mono text-xs cursor-pointer">
+        <span class="text-amber-400 font-semibold block">RP-DL-72891</span>
+        <span class="text-[11px] text-zinc-400">Dell Inspiron 15 5000</span>
+      </button>
+      <button onclick="handleTriggerScan('RP-MB-48992')" class="px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-700 text-left transition-colors font-mono text-xs cursor-pointer">
+        <span class="text-amber-400 font-semibold block">RP-MB-48992</span>
+        <span class="text-[11px] text-zinc-400">Apple MacBook Pro 14"</span>
+      </button>
+      <button onclick="handleTriggerScan('RP-SM-10493')" class="px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-700 text-left transition-colors font-mono text-xs cursor-pointer">
+        <span class="text-amber-400 font-semibold block">RP-SM-10493</span>
+        <span class="text-[11px] text-zinc-400">Samsung Galaxy S24 Ultra</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Known valid benchmark products from the global context
+  const validProducts = ['RP-DL-72891', 'RP-MB-48992', 'RP-SM-10493'];
+
+  function resetScan() {
+    document.getElementById('scan-state-not-found').classList.add('hidden');
+    document.getElementById('scan-state-loading').classList.add('hidden');
+    document.getElementById('scan-state-idle').classList.remove('hidden');
+  }
+
+  function handleTriggerScan(code) {
+    if (!code) return;
+    const clean = code.trim().toUpperCase();
+    
+    // Hide Idle, Show Loading
+    document.getElementById('scan-state-idle').classList.add('hidden');
+    document.getElementById('scan-state-not-found').classList.add('hidden');
+    document.getElementById('scan-state-loading').classList.remove('hidden');
+
+    // SCANNING STATE
+    document.getElementById('icon-scanning').classList.remove('hidden');
+    document.getElementById('icon-found').classList.add('hidden');
+    document.getElementById('icon-verified').classList.add('hidden');
+    document.getElementById('loading-title').innerText = 'Scanning optical pattern...';
+    document.getElementById('loading-desc').innerText = 'Resolving Product ID from registry...';
+
+    setTimeout(() => {
+      if (!validProducts.includes(clean)) {
+        // NOT FOUND
+        document.getElementById('scan-state-loading').classList.add('hidden');
+        document.getElementById('scan-state-not-found').classList.remove('hidden');
+        document.getElementById('not-found-code').innerText = `"${clean}"`;
+        return;
+      }
+
+      // FOUND STATE
+      document.getElementById('icon-scanning').classList.add('hidden');
+      document.getElementById('icon-found').classList.remove('hidden');
+      document.getElementById('loading-title').innerText = `Identity Recognized: ${clean}`;
+
+      setTimeout(() => {
+        // VERIFIED STATE
+        document.getElementById('icon-found').classList.add('hidden');
+        document.getElementById('icon-verified').classList.remove('hidden');
+        document.getElementById('loading-title').innerText = 'Passport Authenticated ✓';
+        document.getElementById('loading-desc').innerText = 'Accessing verified hardware history...';
+
+        setTimeout(() => {
+          // REDIRECT
+          window.location.href = `/passport/${clean}`;
+        }, 700);
+      }, 600);
+    }, 800);
+  }
+
+  // Auto-trigger if demo query param is passed
+  window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const demoParam = urlParams.get('demo');
+    if (demoParam) {
+      handleTriggerScan(demoParam);
+    }
+  }
+</script>
+{% endblock %}

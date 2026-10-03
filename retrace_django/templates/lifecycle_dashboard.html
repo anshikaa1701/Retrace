@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-4xl">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-[#800020] mb-4">Product Lifecycle Dashboard</h1>
+    <p class="text-[#9A2A2A]">Enter your Product ID to visualize the entire journey of your device—from original purchase through all repairs and parts changes—in a powerful interactive timeline.</p>
+  </div>
+
+  <div class="bg-[#EBF5EB] border border-[#C3E6CB] rounded-2xl p-6 sm:p-10 shadow-lg relative overflow-hidden">
+    <form id="lifecycle-form" class="relative z-10 space-y-6">
+      
+      <div class="space-y-2">
+        <label class="text-sm font-semibold text-[#800020] uppercase tracking-wide">Enter Product ID</label>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <input type="text" id="product-id-lc" required placeholder="e.g. RP-DL-72891" class="flex-1 px-4 py-3 bg-white border border-[#C3E6CB] rounded-xl text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#800020] focus:border-transparent transition-all uppercase" />
+          <button type="submit" class="px-8 py-3 bg-[#800020] hover:bg-[#600018] text-white font-bold rounded-xl transition-colors shadow-md whitespace-nowrap">
+            Generate Timeline
+          </button>
+        </div>
+      </div>
+      
+      <!-- Quick Demo Buttons -->
+      <div class="flex gap-2 pt-2 overflow-x-auto pb-2">
+        <span class="text-xs text-[#9A2A2A] font-semibold flex items-center mr-2">Try:</span>
+        <button type="button" onclick="document.getElementById('product-id-lc').value='RP-DL-72891'; document.getElementById('lifecycle-form').dispatchEvent(new Event('submit'));" class="px-3 py-1 bg-white border border-[#C3E6CB] text-xs font-mono rounded-lg hover:bg-[#C3E6CB] hover:text-[#800020] transition-colors">RP-DL-72891</button>
+        <button type="button" onclick="document.getElementById('product-id-lc').value='RP-MB-48992'; document.getElementById('lifecycle-form').dispatchEvent(new Event('submit'));" class="px-3 py-1 bg-white border border-[#C3E6CB] text-xs font-mono rounded-lg hover:bg-[#C3E6CB] hover:text-[#800020] transition-colors">RP-MB-48992</button>
+      </div>
+    </form>
+
+    <!-- Loading State -->
+    <div id="lifecycle-loading" class="hidden mt-8 text-center space-y-4 animate-pulse relative z-10">
+      <div class="w-10 h-10 border-4 border-[#800020] border-t-transparent rounded-full animate-spin mx-auto"></div>
+      <p class="text-[#800020] font-medium tracking-wide text-sm">Synthesizing device history...</p>
+    </div>
+
+    <!-- Results Section (Hidden initially) -->
+    <div id="lifecycle-result" class="hidden mt-10 pt-8 border-t border-[#C3E6CB] relative z-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      <div class="text-center space-y-2 mb-10">
+        <h2 class="text-xl font-bold text-[#800020]" id="lc-display-model">MacBook Pro M2 (2023)</h2>
+        <p class="text-sm font-mono text-[#9A2A2A]">Timeline for <span id="lc-display-id" class="font-bold">RP-DL-72891</span></p>
+      </div>
+
+      <!-- The Vertical Timeline -->
+      <div class="relative max-w-2xl mx-auto pl-4 sm:pl-8">
+        
+        <!-- Continuous Vertical Line -->
+        <div class="absolute top-4 bottom-4 left-7 sm:left-11 w-0.5 bg-[#C3E6CB]"></div>
+
+        <!-- 1. Purchased -->
+        <div class="relative flex items-start gap-6 mb-8 group">
+          <div class="relative z-10 w-8 h-8 rounded-full bg-white border-2 border-[#800020] text-[#800020] flex flex-shrink-0 items-center justify-center mt-1 group-hover:scale-110 transition-transform">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          </div>
+          <div class="bg-white rounded-xl p-4 sm:p-5 border border-[#C3E6CB] shadow-sm flex-1 group-hover:border-[#800020]/30 transition-colors">
+            <div class="flex justify-between items-start mb-1">
+              <h4 class="font-bold text-[#800020] text-sm uppercase tracking-wide">Purchased & Activated</h4>
+              <span class="text-xs text-gray-500 font-mono">Oct 14, 2023</span>
+            </div>
+            <p class="text-sm text-gray-600">Device was officially registered on the network and original warranty commenced.</p>
+          </div>
+        </div>
+
+        <!-- 2. Used -->
+        <div class="relative flex items-start gap-6 mb-8 group">
+          <div class="relative z-10 w-8 h-8 rounded-full bg-[#EBF5EB] border-2 border-[#C3E6CB] text-gray-500 flex flex-shrink-0 items-center justify-center mt-1 group-hover:scale-110 transition-transform">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <div class="bg-white rounded-xl p-4 sm:p-5 border border-[#C3E6CB] shadow-sm flex-1 group-hover:border-[#C3E6CB] transition-colors opacity-90">
+            <div class="flex justify-between items-start mb-1">
+              <h4 class="font-bold text-gray-700 text-sm uppercase tracking-wide">Routine Usage Phase</h4>
+              <span class="text-xs text-gray-500 font-mono">14 Months</span>
+            </div>
+            <p class="text-sm text-gray-500">Normal operating conditions logged via telemetry.</p>
+          </div>
+        </div>
+
+        <!-- 3. Repair 1 -->
+        <div class="relative flex items-start gap-6 mb-8 group">
+          <div class="relative z-10 w-8 h-8 rounded-full bg-amber-50 border-2 border-amber-400 text-amber-500 flex flex-shrink-0 items-center justify-center mt-1 group-hover:scale-110 transition-transform shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"></path></svg>
+          </div>
+          <div class="bg-white rounded-xl p-4 sm:p-5 border border-amber-200 shadow-sm flex-1 group-hover:border-amber-300 transition-colors">
+            <div class="flex justify-between items-start mb-1">
+              <h4 class="font-bold text-amber-600 text-sm uppercase tracking-wide">Repair Event: Screen</h4>
+              <span class="text-xs text-amber-500/70 font-mono">Feb 22, 2025</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-2">Display shattered due to accidental drop. Diagnostics initiated.</p>
+            <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-amber-50 border border-amber-200 text-amber-700 text-[10px] uppercase tracking-wider font-bold">
+              <span>Status: Resolved</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Part Changed -->
+        <div class="relative flex items-start gap-6 mb-8 group">
+          <div class="relative z-10 w-8 h-8 rounded-full bg-white border-2 border-indigo-400 text-indigo-500 flex flex-shrink-0 items-center justify-center mt-1 group-hover:scale-110 transition-transform">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+          </div>
+          <div class="bg-indigo-50/30 rounded-xl p-4 sm:p-5 border border-indigo-200 shadow-sm flex-1 group-hover:border-indigo-300 transition-colors">
+            <div class="flex justify-between items-start mb-1">
+              <h4 class="font-bold text-indigo-600 text-sm uppercase tracking-wide">Component Replaced</h4>
+              <span class="text-xs text-indigo-500/70 font-mono">Feb 24, 2025</span>
+            </div>
+            <p class="text-sm text-gray-600">New genuine LCD assembly installed. Part ID #LCD-89912A registered to passport.</p>
+          </div>
+        </div>
+
+        <!-- 5. Repair 2 (Optional/Mocked) -->
+        <div class="relative flex items-start gap-6 mb-8 group" id="lc-repair-2">
+          <div class="relative z-10 w-8 h-8 rounded-full bg-amber-50 border-2 border-amber-400 text-amber-500 flex flex-shrink-0 items-center justify-center mt-1 group-hover:scale-110 transition-transform">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          </div>
+          <div class="bg-white rounded-xl p-4 sm:p-5 border border-amber-200 shadow-sm flex-1 group-hover:border-amber-300 transition-colors">
+            <div class="flex justify-between items-start mb-1">
+              <h4 class="font-bold text-amber-600 text-sm uppercase tracking-wide">Repair Event: Battery</h4>
+              <span class="text-xs text-amber-500/70 font-mono">Jul 10, 2026</span>
+            </div>
+            <p class="text-sm text-gray-600">Battery health dropped below 75%. New battery cell installed (3rd-party certified).</p>
+          </div>
+        </div>
+
+        <!-- 6. Current Status -->
+        <div class="relative flex items-start gap-6 group">
+          <div class="relative z-10 w-8 h-8 rounded-full bg-[#0277BD] border-2 border-[#0277BD] text-white flex flex-shrink-0 items-center justify-center mt-1 group-hover:scale-110 transition-transform shadow-[0_0_12px_rgba(2,119,189,0.4)]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          </div>
+          <div class="bg-white rounded-xl p-4 sm:p-5 border-2 border-[#0277BD] shadow-md flex-1">
+            <div class="flex justify-between items-start mb-1">
+              <h4 class="font-bold text-[#0277BD] text-sm uppercase tracking-wide">Current Status</h4>
+              <span class="text-xs text-[#0277BD] font-mono">Present</span>
+            </div>
+            <p class="text-sm text-gray-700 font-medium">Device is fully functional, properly documented, and holds high circular resale value.</p>
+          </div>
+        </div>
+        
+      </div>
+      
+      <div class="pt-8 mt-8 border-t border-[#C3E6CB] flex flex-col sm:flex-row justify-center gap-4">
+        <a id="passport-link" href="#" class="px-6 py-3 bg-[#800020] hover:bg-[#600018] text-white text-sm font-bold rounded-xl transition-colors shadow-md text-center">
+          View Raw Passport Data
+        </a>
+        <a href="/health-score" class="px-6 py-3 bg-white hover:bg-gray-50 border border-[#C3E6CB] text-[#800020] text-sm font-bold rounded-xl transition-colors shadow-sm text-center">
+          Check Health Score
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('lifecycle-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const pid = document.getElementById('product-id-lc').value.toUpperCase();
+    
+    // UI states
+    document.getElementById('lifecycle-result').classList.add('hidden');
+    document.getElementById('lifecycle-loading').classList.remove('hidden');
+    
+    // Simulate API fetch delay
+    setTimeout(() => {
+      
+      let model = "Generic Device";
+      if (pid === 'RP-DL-72891' || pid.includes('DL')) {
+        model = "MacBook Pro M2 (2023)";
+        document.getElementById('lc-repair-2').style.display = 'none'; // Only 1 repair for this device
+      } else if (pid === 'RP-MB-48992' || pid.includes('MB')) {
+        model = "iPhone 13 Pro (128GB)";
+        document.getElementById('lc-repair-2').style.display = 'flex'; // 2 repairs
+      } else {
+        model = "Unknown Model";
+        if (pid.length % 2 === 0) {
+          document.getElementById('lc-repair-2').style.display = 'flex';
+        } else {
+          document.getElementById('lc-repair-2').style.display = 'none';
+        }
+      }
+      
+      // Update DOM elements
+      document.getElementById('lc-display-id').textContent = pid;
+      document.getElementById('lc-display-model').textContent = model;
+      document.getElementById('passport-link').href = `/passport/${pid}`;
+      
+      // Toggle visibility
+      document.getElementById('lifecycle-loading').classList.add('hidden');
+      document.getElementById('lifecycle-result').classList.remove('hidden');
+    }, 900);
+  });
+</script>
+{% endblock %}

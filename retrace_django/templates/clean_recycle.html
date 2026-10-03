@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-4xl">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-[#800020] mb-4">"Clean Before Recycle" Checklist</h1>
+    <p class="text-[#9A2A2A]">Before sending your device for recovery or recycling, complete this simple checklist to ensure data safety and compliance.</p>
+  </div>
+
+  <div class="bg-[#EBF5EB] border border-[#C3E6CB] rounded-2xl p-6 sm:p-10 shadow-lg relative overflow-hidden max-w-2xl mx-auto transition-transform duration-300 hover:scale-[1.02]">
+    
+    <div class="space-y-4 stagger-container">
+      
+      <label class="flex items-start gap-4 p-4 bg-white rounded-xl border border-[#C3E6CB] cursor-pointer hover:bg-gray-50 transition-colors shadow-sm">
+        <input type="checkbox" class="mt-1 w-5 h-5 text-[#800020] border-gray-300 rounded focus:ring-[#800020]" />
+        <div class="flex-1">
+          <h4 class="font-bold text-gray-800 text-sm">Personal Data Removed</h4>
+          <p class="text-xs text-gray-500 mt-1">Factory reset the device and ensure all iCloud/Google accounts are logged out.</p>
+        </div>
+      </label>
+
+      <label class="flex items-start gap-4 p-4 bg-white rounded-xl border border-[#C3E6CB] cursor-pointer hover:bg-gray-50 transition-colors shadow-sm">
+        <input type="checkbox" class="mt-1 w-5 h-5 text-[#800020] border-gray-300 rounded focus:ring-[#800020]" />
+        <div class="flex-1">
+          <h4 class="font-bold text-gray-800 text-sm">Accessories Checked</h4>
+          <p class="text-xs text-gray-500 mt-1">Remove SIM cards, SD cards, cases, and any third-party accessories.</p>
+        </div>
+      </label>
+
+      <label class="flex items-start gap-4 p-4 bg-white rounded-xl border border-[#C3E6CB] cursor-pointer hover:bg-gray-50 transition-colors shadow-sm">
+        <input type="checkbox" class="mt-1 w-5 h-5 text-[#800020] border-gray-300 rounded focus:ring-[#800020]" />
+        <div class="flex-1">
+          <h4 class="font-bold text-gray-800 text-sm">Battery Condition Verified</h4>
+          <p class="text-xs text-gray-500 mt-1">Ensure the battery is not swollen or leaking. Handle with care if damaged.</p>
+        </div>
+      </label>
+
+      <label class="flex items-start gap-4 p-4 bg-white rounded-xl border border-[#C3E6CB] cursor-pointer hover:bg-gray-50 transition-colors shadow-sm">
+        <input type="checkbox" class="mt-1 w-5 h-5 text-[#800020] border-gray-300 rounded focus:ring-[#800020]" />
+        <div class="flex-1">
+          <h4 class="font-bold text-gray-800 text-sm">Product Securely Packed</h4>
+          <p class="text-xs text-gray-500 mt-1">Place in sturdy packaging suitable for transit to the recovery facility.</p>
+        </div>
+      </label>
+
+    </div>
+
+    <button class="w-full mt-8 px-6 py-4 bg-[#800020] hover:bg-[#600018] text-white font-bold rounded-xl transition-colors shadow-md text-sm uppercase tracking-wide">
+      Confirm & Generate Dispatch Label
+    </button>
+    
+  </div>
+</div>
+{% endblock %}
