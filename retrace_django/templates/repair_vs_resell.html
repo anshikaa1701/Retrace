@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-4xl">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-[#800020] mb-4">Repair vs Resell Comparison</h1>
+    <p class="text-[#9A2A2A]">See the data side-by-side to make the most practical circular decision for your device.</p>
+  </div>
+
+  <div class="bg-[#EBF5EB] border border-[#C3E6CB] rounded-2xl p-6 sm:p-10 shadow-lg relative overflow-hidden">
+    
+    <div class="bg-white rounded-xl p-6 sm:p-8 border border-[#C3E6CB] shadow-sm max-w-2xl mx-auto">
+      <div class="text-center mb-6 border-b border-[#C3E6CB] pb-4">
+        <h2 class="text-xl font-bold text-gray-800">iPhone 12 (64GB)</h2>
+        <p class="text-sm font-mono text-gray-500 mt-1">Age: <span class="text-[#800020] font-bold">3 Years</span></p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 divide-x divide-[#C3E6CB]">
+        
+        <div class="text-center px-4">
+          <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4">Repair Option</h3>
+          <div class="text-3xl font-black text-red-600 mb-2">₹1,500</div>
+          <p class="text-xs text-gray-500 mb-4">Estimated Battery Replacement</p>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 text-[10px] uppercase font-bold border border-red-200">
+            Current Choice
+          </div>
+        </div>
+
+        <div class="text-center px-4">
+          <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4">Resell Option</h3>
+          <div class="text-3xl font-black text-emerald-600 mb-2">₹4,000</div>
+          <p class="text-xs text-gray-500 mb-4">Est. value in 'Fair' condition</p>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] uppercase font-bold border border-emerald-200">
+            Better Value
+          </div>
+        </div>
+        
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-[#C3E6CB] text-center">
+        <h4 class="font-bold text-[#800020] text-sm uppercase tracking-wide mb-2">AI Recommendation</h4>
+        <p class="text-sm text-gray-600 bg-[#EBF5EB] p-4 rounded-lg border border-[#C3E6CB]">
+          Since the repair cost is low (₹1,500) and the device is 3 years old, repairing it gives you another 1-2 years of life. However, if you are planning to upgrade, reselling it as-is for ₹4,000 provides excellent circular value.
+        </p>
+      </div>
+    </div>
+    
+  </div>
+</div>
+{% endblock %}

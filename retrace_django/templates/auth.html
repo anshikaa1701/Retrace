@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="relative min-h-[90vh] bg-[#09090b] text-zinc-100 flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8 select-none font-sans">
+  <div class="relative z-10 w-full max-w-5xl mx-auto my-auto space-y-6">
+    
+    <!-- Brand Header -->
+    <div class="text-center space-y-1.5">
+      <a href="/" class="inline-flex items-center gap-2.5 group">
+        <div class="w-8 h-8 rounded-lg overflow-hidden border border-zinc-700 bg-zinc-900 shrink-0 group-hover:border-zinc-500 transition-colors shadow-sm flex items-center justify-center">
+            <span class="font-bold text-amber-400">R</span>
+        </div>
+        <span class="font-display font-bold text-lg tracking-wider text-zinc-100">RETRACE</span>
+      </a>
+      <div class="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+        Circular Hardware Lifecycle Platform
+      </div>
+    </div>
+
+    <!-- PHASE 1: ROLE SELECTION CARDS -->
+    <div id="role-selection" class="space-y-6">
+      <div class="text-center space-y-2 max-w-xl mx-auto">
+        <h1 class="font-display font-bold text-2xl sm:text-3xl text-zinc-100 tracking-tight">
+          How are you using ReTrace?
+        </h1>
+        <p class="text-zinc-400 text-sm font-normal">
+          Select your portal identity to access hardware lifecycle tools and verified records.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- CUSTOMER -->
+        <div onclick="selectRole('CUSTOMER')" class="rounded-xl p-5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 flex flex-col justify-between space-y-5 cursor-pointer transition-colors group">
+          <div class="space-y-3">
+            <div class="w-10 h-10 rounded-lg bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div>
+              <h3 class="font-display font-semibold text-lg text-zinc-100">Device Owner</h3>
+              <p class="font-mono text-xs text-amber-400 font-medium">Individual / Enterprise Customer</p>
+            </div>
+            <ul class="space-y-1.5 text-xs font-mono text-zinc-400 pt-2 border-t border-zinc-800">
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span>Manage device passports</span></li>
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span>Find verified technicians</span></li>
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span>Secondary resale & transfer</span></li>
+            </ul>
+          </div>
+          <div class="pt-2">
+            <div class="p-2.5 rounded-lg flex items-center justify-between text-xs font-mono transition-colors" style="background-color: #800020; color: #FFFFFF; font-weight: bold;">
+              <span class="text-[11px]">Continue as Owner</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- REPAIRER -->
+        <div onclick="selectRole('REPAIRER')" class="rounded-xl p-5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 flex flex-col justify-between space-y-5 cursor-pointer transition-colors group">
+          <div class="space-y-3">
+            <div class="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <div>
+              <h3 class="font-display font-semibold text-lg text-zinc-100">Technician / Shop</h3>
+              <p class="font-mono text-xs text-zinc-400 font-medium">Authorized Service Partner</p>
+            </div>
+            <ul class="space-y-1.5 text-xs font-mono text-zinc-400 pt-2 border-t border-zinc-800">
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>Manage workshop bench</span></li>
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>Accept incoming repairs</span></li>
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>Certify authenticated repairs</span></li>
+            </ul>
+          </div>
+          <div class="pt-2">
+            <div class="p-2.5 rounded-lg flex items-center justify-between text-xs font-mono transition-colors" style="background-color: #800020; color: #FFFFFF; font-weight: bold;">
+              <span class="text-[11px]">Continue as Repairer</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECOVERY -->
+        <div onclick="selectRole('RECOVERY')" class="rounded-xl p-5 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 flex flex-col justify-between space-y-5 cursor-pointer transition-colors group">
+          <div class="space-y-3">
+            <div class="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><path d="M7 15.3 3.4 9 12 3.3z"/><path d="M13.8 21.4 7 15.3l8.6-5.7z"/><path d="M20.6 9 13.8 21.4l-5.2-12.1z"/></svg>
+            </div>
+            <div>
+              <h3 class="font-display font-semibold text-lg text-zinc-100">Recovery Partner</h3>
+              <p class="font-mono text-xs text-zinc-400 font-medium">Circularity & E-Waste Facility</p>
+            </div>
+            <ul class="space-y-1.5 text-xs font-mono text-zinc-400 pt-2 border-t border-zinc-800">
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>Manage batch intake</span></li>
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>Component salvage tracking</span></li>
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>Issue smelting certificates</span></li>
+            </ul>
+          </div>
+          <div class="pt-2">
+            <div class="p-2.5 rounded-lg flex items-center justify-between text-xs font-mono transition-colors" style="background-color: #800020; color: #FFFFFF; font-weight: bold;">
+              <span class="text-[11px]">Continue as Recycler</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center pt-4">
+        <a href="/platform-admin" class="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors inline-flex items-center gap-1.5 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span>Protocol Admin Governance Portal</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- PHASE 2: ROLE-SPECIFIC LOGIN -->
+    <div id="role-auth-form" class="max-w-md mx-auto w-full hidden">
+      <div class="rounded-xl bg-zinc-900 border border-zinc-800 p-6 sm:p-7 space-y-5 shadow-lg">
+        
+        <button type="button" onclick="backToRoles()" class="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          <span>Change Role</span>
+        </button>
+
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-700">
+            <span id="role-badge" class="font-medium uppercase"></span>
+          </div>
+          <h2 id="role-title" class="font-display font-bold text-xl sm:text-2xl text-zinc-100"></h2>
+          <p id="role-desc" class="text-xs font-mono text-zinc-400"></p>
+        </div>
+
+        <form id="login-form" class="space-y-3.5">
+          <div class="space-y-1">
+            <label class="text-xs font-mono text-zinc-300 block">Email</label>
+            <div class="relative">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500 absolute left-3 top-3"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input type="email" id="email-input" required class="w-full pl-9 pr-3 py-2 rounded-lg bg-zinc-950 border border-zinc-700 text-zinc-100 text-xs sm:text-sm font-mono focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400" />
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-mono text-zinc-300">Password</label>
+              <button type="button" class="text-[11px] font-mono text-amber-400 hover:underline cursor-pointer">Forgot password?</button>
+            </div>
+            <div class="relative">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500 absolute left-3 top-3"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" value="••••••••••••" required class="w-full pl-9 pr-10 py-2 rounded-lg bg-zinc-950 border border-zinc-700 text-zinc-100 text-xs sm:text-sm font-mono focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400" />
+            </div>
+          </div>
+
+          <button type="submit" id="submit-btn" class="w-full py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono font-semibold text-xs flex items-center justify-center gap-2 transition-colors mt-2">
+            <span id="submit-text">Sign In</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentRole = null;
+
+  function selectRole(role) {
+    currentRole = role;
+    document.getElementById('role-selection').classList.add('hidden');
+    document.getElementById('role-auth-form').classList.remove('hidden');
+
+    const badge = document.getElementById('role-badge');
+    const title = document.getElementById('role-title');
+    const desc = document.getElementById('role-desc');
+    const email = document.getElementById('email-input');
+
+    badge.innerText = role + ' PORTAL';
+
+    if (role === 'CUSTOMER') {
+      title.innerText = 'Owner Sign In';
+      desc.innerText = 'Sign in to access your registered products & lifecycle passports.';
+      email.value = 'owner@retrace.io';
+    } else if (role === 'REPAIRER') {
+      title.innerText = 'Repairer Sign In';
+      desc.innerText = 'Sign in to manage your workshop bench & accept repair orders.';
+      email.value = 'techfix@retrace.io';
+    } else if (role === 'RECOVERY') {
+      title.innerText = 'Recovery Partner Sign In';
+      desc.innerText = 'Sign in to manage circular pickups & verify smelting certificates.';
+      email.value = 'greencycle@retrace.io';
+    }
+  }
+
+  function backToRoles() {
+    currentRole = null;
+    document.getElementById('role-auth-form').classList.add('hidden');
+    document.getElementById('role-selection').classList.remove('hidden');
+  }
+
+  document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('submit-text').innerText = 'Authenticating...';
+    
+    setTimeout(() => {
+      // In a real app we'd dispatch context state. Here we simulate redirect.
+      // ReTrace expects us to go to the respective dashboard.
+      if (currentRole === 'CUSTOMER') window.location.href = '/dashboard';
+      else if (currentRole === 'REPAIRER') window.location.href = '/repairer/dashboard/';
+      else if (currentRole === 'RECOVERY') window.location.href = '/recycler/dashboard/';
+    }, 600);
+  });
+</script>
+{% endblock %}

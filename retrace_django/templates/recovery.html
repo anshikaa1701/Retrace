@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-8 font-sans">
+  
+  <!-- Title -->
+  <div class="text-center space-y-2">
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono text-xs">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.09-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633-4.512-1.208 1.208-4.512"/></svg>
+      <span>Zero-Landfill Recovery Portal</span>
+    </div>
+    <h1 class="font-display font-semibold text-2xl sm:text-3xl text-zinc-100 tracking-tight">
+      If it cannot be repaired, it still has circular value.
+    </h1>
+    <p class="text-zinc-400 text-xs sm:text-sm max-w-xl mx-auto">
+      Prevent electronic waste from entering landfills. ReTrace coordinates with certified hydrometallurgical refineries and component harvesters.
+    </p>
+  </div>
+
+  <!-- 3 Circular Recovery Paths -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="recovery-paths-container">
+    
+    <!-- Path 1: Sell For Parts -->
+    <div onclick="selectRecoveryType('SELL_FOR_PARTS', 2500)" class="recovery-path-card rounded-xl p-5 border cursor-pointer transition-colors flex flex-col justify-between border-amber-400 bg-zinc-900" data-type="SELL_FOR_PARTS">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+          </div>
+          <span class="font-mono text-xs text-amber-400 font-semibold">Est. ₹2,000 – ₹3,500</span>
+        </div>
+        <h3 class="font-display font-semibold text-base text-zinc-100 mb-1.5">Sell for Parts</h3>
+        <p class="text-xs text-zinc-400 leading-relaxed">
+          Harvest working sub-modules (screen panels, RAM, storage drives, Wi-Fi chips) for computer refurbishing programs.
+        </p>
+      </div>
+      <div class="mt-4 pt-3 border-t border-zinc-800 font-mono text-[11px] text-zinc-400 flex items-center justify-between">
+        <span>Salvage Rate: 65%</span>
+        <span class="path-status text-amber-400 font-semibold">Selected ✓</span>
+      </div>
+    </div>
+
+    <!-- Path 2: Material Recovery -->
+    <div onclick="selectRecoveryType('MATERIAL_RECOVERY', 1400)" class="recovery-path-card rounded-xl p-5 border cursor-pointer transition-colors flex flex-col justify-between border-zinc-800 bg-zinc-900/60 hover:border-zinc-700" data-type="MATERIAL_RECOVERY">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          </div>
+          <span class="font-mono text-xs text-emerald-400 font-semibold">Est. ₹1,200 – ₹1,800</span>
+        </div>
+        <h3 class="font-display font-semibold text-base text-zinc-100 mb-1.5">Material Recovery</h3>
+        <p class="text-xs text-zinc-400 leading-relaxed">
+          Hydro-metallurgical refining extracts gold, copper, silver, and neodymium magnets from oxidized printed circuit boards.
+        </p>
+      </div>
+      <div class="mt-4 pt-3 border-t border-zinc-800 font-mono text-[11px] text-zinc-400 flex items-center justify-between">
+        <span>Purity: 99.4%</span>
+        <span class="path-status text-zinc-500">Select</span>
+      </div>
+    </div>
+
+    <!-- Path 3: E-Waste Recycling -->
+    <div onclick="selectRecoveryType('E_WASTE_RECYCLING', 800)" class="recovery-path-card rounded-xl p-5 border cursor-pointer transition-colors flex flex-col justify-between border-zinc-800 bg-zinc-900/60 hover:border-zinc-700" data-type="E_WASTE_RECYCLING">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-200"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.09-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633-4.512-1.208 1.208-4.512"/></svg>
+          </div>
+          <span class="font-mono text-xs text-zinc-300 font-semibold">Est. ₹500 – ₹900</span>
+        </div>
+        <h3 class="font-display font-semibold text-base text-zinc-100 mb-1.5">E-Waste Recycling</h3>
+        <p class="text-xs text-zinc-400 leading-relaxed">
+          R2v3 Certified zero-landfill smelting with certified toxic neutralisation and cryptographic certificate of destruction.
+        </p>
+      </div>
+      <div class="mt-4 pt-3 border-t border-zinc-800 font-mono text-[11px] text-zinc-400 flex items-center justify-between">
+        <span>Landfill Diversion: 100%</span>
+        <span class="path-status text-zinc-500">Select</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dispatch Recovery Pickup Form -->
+  <div class="rounded-xl p-6 sm:p-8 bg-zinc-900 border border-zinc-800 max-w-2xl mx-auto">
+    
+    <!-- Success State (Hidden by default) -->
+    <div id="success-state" class="hidden py-6 text-center space-y-4 font-sans">
+      <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <h3 class="font-display font-semibold text-xl text-zinc-100">
+        Recovery Pickup Scheduled
+      </h3>
+      <p class="text-xs text-zinc-300 max-w-md mx-auto leading-relaxed">
+        Ticket dispatched to <strong id="success-partner" class="text-zinc-100">Partner</strong> for <strong id="success-product" class="text-emerald-400">Product</strong>.
+      </p>
+      <div class="p-3.5 rounded-lg bg-zinc-950/60 border border-zinc-800 text-left font-mono text-xs space-y-1 text-zinc-400">
+        <div>Courier: GreenCycle Logistics Fleet</div>
+        <div>Pickup Date: <span id="success-date"></span></div>
+        <div>Address: <span id="success-address"></span></div>
+        <div class="text-emerald-400 font-medium">Estimated Circular Value: ₹<span id="success-value">2500</span></div>
+      </div>
+      <div class="pt-2 flex flex-col sm:flex-row gap-2.5 justify-center">
+        <button onclick="alert('Navigating to Recycler Portal (Placeholder)')" class="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono text-xs font-semibold cursor-pointer transition-colors">
+          Open Recycler Portal to Accept Pickup
+        </button>
+        <button onclick="resetForm()" class="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700/80 text-zinc-300 font-mono text-xs cursor-pointer transition-colors">
+          Schedule Another Device
+        </button>
+      </div>
+    </div>
+
+    <!-- Form State -->
+    <form id="recovery-form" onsubmit="handleRequestRecovery(event)" class="space-y-4 text-xs font-sans">
+      <div class="border-b border-zinc-800 pb-3">
+        <h3 class="font-display font-semibold text-lg text-zinc-100">
+          Dispatch Courier Pickup Request
+        </h3>
+        <p class="text-zinc-400 text-xs mt-0.5">
+          Authorized circular partners pick up directly from your doorstep with chain-of-custody tracking.
+        </p>
+      </div>
+
+      <!-- Select Target Device -->
+      <div>
+        <label class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">
+          Target Device to Retire
+        </label>
+        <select id="product-select" class="w-full p-2.5 bg-zinc-950/60 border border-zinc-800 rounded-lg text-zinc-200 font-mono focus:border-zinc-600 focus:outline-none">
+          {% for p in products %}
+          <option value="{{ p.id }}" data-name="{{ p.brand }} {{ p.model }}">
+            {{ p.productId }} — {{ p.brand }} {{ p.model }} ({{ p.condition }})
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Select Recovery Partner -->
+      <div>
+        <label class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">
+          Certified Recovery Facility
+        </label>
+        <select id="partner-select" class="w-full p-2.5 bg-zinc-950/60 border border-zinc-800 rounded-lg text-zinc-200 font-mono focus:border-zinc-600 focus:outline-none">
+          {% for rp in recoveryPartners %}
+          <option value="{{ rp.id }}" data-name="{{ rp.name }}">
+            {{ rp.name }} — {{ rp.typeLabel }} ({{ rp.distanceKm }} km away)
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">
+            Pickup Address
+          </label>
+          <input type="text" id="pickup-address" value="Indiranagar 100ft Rd, Bangalore 560038" required class="w-full p-2 bg-zinc-950/60 border border-zinc-800 rounded-lg text-zinc-200 font-mono focus:border-zinc-600 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">
+            Preferred Pickup Date
+          </label>
+          <input type="date" id="pickup-date" value="2026-09-28" required class="w-full p-2 bg-zinc-950/60 border border-zinc-800 rounded-lg text-zinc-200 font-mono focus:border-zinc-600 focus:outline-none" />
+        </div>
+      </div>
+
+      <button type="submit" id="submit-btn" class="w-full py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono text-xs font-semibold transition-colors cursor-pointer">
+        Dispatch Recovery Courier (₹2500 Payout Estimate)
+      </button>
+    </form>
+
+  </div>
+</div>
+
+<script>
+  let currentRecoveryType = 'SELL_FOR_PARTS';
+  let currentEstimatedValue = 2500;
+
+  function selectRecoveryType(type, estValue) {
+    currentRecoveryType = type;
+    currentEstimatedValue = estValue;
+    
+    // Update button text
+    document.getElementById('submit-btn').innerText = `Dispatch Recovery Courier (₹${estValue} Payout Estimate)`;
+    
+    // Update UI styling for cards
+    const cards = document.querySelectorAll('.recovery-path-card');
+    cards.forEach(card => {
+      const isSelected = card.dataset.type === type;
+      
+      // Update card borders and backgrounds
+      if (isSelected) {
+        card.classList.remove('border-zinc-800', 'bg-zinc-900/60', 'hover:border-zinc-700');
+        card.classList.add('border-amber-400', 'bg-zinc-900');
+      } else {
+        card.classList.add('border-zinc-800', 'bg-zinc-900/60', 'hover:border-zinc-700');
+        card.classList.remove('border-amber-400', 'bg-zinc-900');
+      }
+      
+      // Update status text inside card
+      const statusSpan = card.querySelector('.path-status');
+      if (isSelected) {
+        statusSpan.classList.remove('text-zinc-500');
+        statusSpan.classList.add('text-amber-400', 'font-semibold');
+        statusSpan.innerText = 'Selected ✓';
+      } else {
+        statusSpan.classList.add('text-zinc-500');
+        statusSpan.classList.remove('text-amber-400', 'font-semibold');
+        statusSpan.innerText = 'Select';
+      }
+    });
+  }
+
+  function handleRequestRecovery(e) {
+    e.preventDefault();
+    
+    const productSelect = document.getElementById('product-select');
+    const partnerSelect = document.getElementById('partner-select');
+    
+    const productName = productSelect.options[productSelect.selectedIndex].dataset.name;
+    const partnerName = partnerSelect.options[partnerSelect.selectedIndex].dataset.name;
+    
+    const address = document.getElementById('pickup-address').value;
+    const date = document.getElementById('pickup-date').value;
+    
+    // Set success screen data
+    document.getElementById('success-product').innerText = productName;
+    document.getElementById('success-partner').innerText = partnerName;
+    document.getElementById('success-address').innerText = address;
+    document.getElementById('success-date').innerText = date;
+    document.getElementById('success-value').innerText = currentEstimatedValue;
+    
+    // Swap views
+    document.getElementById('recovery-form').classList.add('hidden');
+    document.getElementById('success-state').classList.remove('hidden');
+  }
+
+  function resetForm() {
+    document.getElementById('success-state').classList.add('hidden');
+    document.getElementById('recovery-form').classList.remove('hidden');
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-4xl">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-[#800020] mb-4">Repair Cost Estimator</h1>
+    <p class="text-[#9A2A2A]">Describe the issue with your device. Our AI will identify the problem and give you a breakdown of estimated parts and service costs so you can decide if it's practical to repair!</p>
+  </div>
+
+  <div class="bg-[#EBF5EB] border border-[#C3E6CB] rounded-2xl p-6 sm:p-10 shadow-lg relative overflow-hidden">
+    <form id="repair-estimator-form" class="relative z-10 space-y-6">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2 md:col-span-2">
+          <label class="text-sm font-semibold text-[#800020] uppercase tracking-wide">Product Model</label>
+          <input type="text" id="repair-model" required placeholder="e.g. iPhone 13, MacBook Air M1" class="w-full px-4 py-3 bg-white border border-[#C3E6CB] rounded-xl text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#800020] focus:border-transparent transition-all" />
+        </div>
+        
+        <div class="space-y-2 md:col-span-2">
+          <label class="text-sm font-semibold text-[#800020] uppercase tracking-wide">Problem Description</label>
+          <textarea id="repair-problem" required rows="3" placeholder="Describe the issue (e.g., The screen is cracked and touch isn't working, or battery drains in 2 hours)..." class="w-full px-4 py-3 bg-white border border-[#C3E6CB] rounded-xl text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#800020] focus:border-transparent transition-all resize-none"></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="w-full mt-6 px-6 py-4 bg-[#800020] hover:bg-[#600018] text-white font-bold rounded-xl transition-colors shadow-md text-lg">
+        Analyze & Estimate Repair Cost
+      </button>
+    </form>
+
+    <!-- Loading State -->
+    <div id="repair-loading" class="hidden mt-10 pt-8 border-t border-[#C3E6CB] text-center space-y-4 animate-pulse relative z-10">
+      <div class="w-12 h-12 border-4 border-[#800020] border-t-transparent rounded-full animate-spin mx-auto"></div>
+      <p class="text-[#800020] font-medium tracking-wide">AI is analyzing the problem...</p>
+    </div>
+
+    <!-- Results Section (Hidden initially) -->
+    <div id="repair-result" class="hidden mt-10 pt-8 border-t border-[#C3E6CB] space-y-6 animate-in fade-in duration-500 relative z-10">
+      
+      <div class="bg-white rounded-xl p-5 border border-[#C3E6CB]">
+        <h4 class="font-bold text-[#800020] mb-2 uppercase text-sm tracking-wider">AI Diagnosis</h4>
+        <p id="ai-diagnosis-text" class="text-sm text-gray-700 leading-relaxed"></p>
+      </div>
+
+      <div class="bg-white rounded-xl p-5 border border-[#C3E6CB] space-y-4">
+        <h4 class="font-bold text-[#800020] uppercase text-sm tracking-wider border-b border-[#C3E6CB] pb-2">Estimated Breakdown</h4>
+        
+        <div class="flex justify-between items-center text-gray-700 text-sm">
+          <span>Estimated Parts Cost</span>
+          <span class="font-mono font-medium">₹<span id="cost-parts"></span></span>
+        </div>
+        
+        <div class="flex justify-between items-center text-gray-700 text-sm">
+          <span>Estimated Service/Labor Cost</span>
+          <span class="font-mono font-medium">₹<span id="cost-labor"></span></span>
+        </div>
+
+        <div class="flex justify-between items-center pt-3 border-t border-[#C3E6CB] text-[#800020] text-lg font-bold">
+          <span>Total Estimated Repair Cost</span>
+          <span class="font-mono">₹<span id="cost-total"></span></span>
+        </div>
+      </div>
+      
+      <div class="pt-4 flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/repairers" class="px-6 py-3 bg-[#0277BD] hover:bg-[#025a8f] text-white font-bold rounded-xl transition-colors shadow-sm text-center">
+          Find Local Repairers
+        </a>
+        <a href="/estimator" class="px-6 py-3 bg-white hover:bg-gray-50 border border-[#C3E6CB] text-[#800020] font-bold rounded-xl transition-colors shadow-sm text-center">
+          Check Resale Value Instead
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('repair-estimator-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Hide form, show loading
+    document.getElementById('repair-estimator-form').style.display = 'none';
+    document.getElementById('repair-loading').classList.remove('hidden');
+    
+    // Simple mock logic for estimation
+    const model = document.getElementById('repair-model').value;
+    const problem = document.getElementById('repair-problem').value.toLowerCase();
+    
+    setTimeout(() => {
+      let parts = 4000;
+      let labor = 3000;
+      let diagnosis = "General hardware failure identified.";
+      
+      if (problem.includes('screen') || problem.includes('display') || problem.includes('glass') || problem.includes('crack')) {
+        parts = 9500 + (model.length * 400);
+        labor = 4500;
+        diagnosis = "The display assembly (LCD/OLED + Digitizer) requires replacement. Service involves removing the adhesive seal and transferring biometric sensors.";
+      } else if (problem.includes('battery') || problem.includes('charge') || problem.includes('drain')) {
+        parts = 3500;
+        labor = 2500;
+        diagnosis = "Battery degradation detected. A standard battery replacement is required. Device water resistance seals will be reapplied.";
+      } else if (problem.includes('water') || problem.includes('liquid') || problem.includes('spill')) {
+        parts = 12000;
+        labor = 9500;
+        diagnosis = "Liquid damage requires logic board ultrasonic cleaning and potential component micro-soldering. High risk of additional hidden faults.";
+      } else if (problem.includes('button') || problem.includes('key')) {
+        parts = 2000;
+        labor = 4000;
+        diagnosis = "Mechanical switch failure. Requires disassembly of the chassis to replace the flex cable assembly.";
+      }
+      
+      document.getElementById('ai-diagnosis-text').textContent = diagnosis;
+      document.getElementById('cost-parts').textContent = parts.toLocaleString('en-IN');
+      document.getElementById('cost-labor').textContent = labor.toLocaleString('en-IN');
+      document.getElementById('cost-total').textContent = (parts + labor).toLocaleString('en-IN');
+      
+      // Hide loading, show results
+      document.getElementById('repair-loading').classList.add('hidden');
+      document.getElementById('repair-result').classList.remove('hidden');
+      
+      // Show form again but keep it above results
+      document.getElementById('repair-estimator-form').style.display = 'block';
+    }, 1500); // Simulate AI delay
+  });
+</script>
+{% endblock %}

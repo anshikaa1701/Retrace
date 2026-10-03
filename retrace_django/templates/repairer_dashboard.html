@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6 font-sans select-none">
+
+  <!-- Header Banner & Portal Actions -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-700 mb-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+        <span>Technician Portal</span>
+      </div>
+      <h1 class="font-display font-bold text-2xl sm:text-3xl text-zinc-100">
+        Workshop Command Hub
+      </h1>
+      <p class="text-xs font-mono text-zinc-400 mt-1">
+        Manage bench work orders • Emit cryptographic passport updates
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2 flex-wrap">
+      <button onclick="toggleEditShop()" class="px-3.5 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono text-xs font-medium border border-zinc-700 flex items-center gap-1.5 transition-colors cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-400"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        <span>Edit Shop</span>
+      </button>
+
+      <a href="/repairers/{{ shop.id }}" class="px-3.5 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono text-xs border border-zinc-700 flex items-center gap-1.5 transition-colors">
+        <span>Public Profile</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-400"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="rounded-xl p-5 sm:p-6 bg-zinc-900 border border-zinc-800">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+
+      <!-- Shop Photo + Info -->
+      <div class="flex items-start sm:items-center gap-4">
+        <div class="relative flex-shrink-0">
+          <img src="{% if shop.avatar %}{{ shop.avatar }}{% else %}https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=300{% endif %}" alt="{{ shop.name }}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover border border-zinc-700" />
+          <span id="shop-availability-badge" class="absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-500 text-zinc-950">
+            {% if shop.availability %}{{ shop.availability }}{% else %}OPEN{% endif %}
+          </span>
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 class="font-display font-bold text-xl text-zinc-100">{{ shop.name }}</h2>
+
+            {% if shop.verificationStatus == 'VERIFIED' %}
+            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 text-[10px] font-mono flex items-center gap-1">
+              ✓ Verified
+            </span>
+            {% else %}
+            <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/25 text-[10px] font-mono">
+              Pending Verification
+            </span>
+            {% endif %}
+          </div>
+
+          <div class="flex items-center gap-2 text-xs font-mono text-zinc-400 flex-wrap">
+            <span class="text-amber-400 font-medium">{{ shop.specialty }}</span>
+            <span>•</span>
+            <span>{% if shop.city %}{{ shop.city }}{% else %}{{ shop.location }}{% endif %}</span>
+            <span>•</span>
+            <span>Lead: {{ shop.ownerName }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics Pill Block -->
+      <div class="flex items-center gap-4 bg-zinc-950/60 p-3 rounded-lg border border-zinc-800 flex-shrink-0">
+        <div class="text-center px-2">
+          <div class="flex items-center justify-center gap-1 text-amber-400 font-mono text-base font-bold">
+            ★ <span>{% if shop.rating > 0 %}{{ shop.rating }}{% else %}New{% endif %}</span>
+          </div>
+          <span class="text-[10px] font-mono text-zinc-500 uppercase block">RATING</span>
+        </div>
+        <div class="w-[1px] h-6 bg-zinc-800"></div>
+        <div class="text-center px-2">
+          <span class="font-display font-semibold text-base text-zinc-100 block">{{ shop.reviewCount }}</span>
+          <span class="text-[10px] font-mono text-zinc-500 uppercase block">REVIEWS</span>
+        </div>
+        <div class="w-[1px] h-6 bg-zinc-800"></div>
+        <div class="text-center px-2">
+          <span class="font-display font-semibold text-base text-emerald-400 block">{{ shop.completedRepairs }}</span>
+          <span class="text-[10px] font-mono text-zinc-500 uppercase block">COMPLETED</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inline Edit Form toggle -->
+    <div id="edit-shop-form" class="hidden mt-5 pt-5 border-t border-zinc-800 space-y-3">
+      <div class="font-mono text-xs text-amber-400 font-semibold uppercase">Quick Shop Settings</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="space-y-1">
+          <label class="text-xs font-mono text-zinc-400">AVAILABILITY</label>
+          <select id="edit-availability" class="w-full p-2 rounded-lg bg-zinc-950 border border-zinc-700 text-zinc-100 text-xs font-mono focus:outline-none focus:border-amber-400">
+            <option value="OPEN" {% if shop.availability == 'OPEN' %}selected{% endif %}>OPEN (Accepting Repairs)</option>
+            <option value="BUSY" {% if shop.availability == 'BUSY' %}selected{% endif %}>BUSY (Delayed Turnaround)</option>
+            <option value="CLOSED" {% if shop.availability == 'CLOSED' %}selected{% endif %}>CLOSED (Not Accepting)</option>
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-xs font-mono text-zinc-400">OPENING HOURS</label>
+          <input type="text" id="edit-hours" value="{% if shop.openingHours %}{{ shop.openingHours }}{% else %}Mon–Sat: 10:00 AM – 8:00 PM{% endif %}" class="w-full p-2 rounded-lg bg-zinc-950 border border-zinc-700 text-zinc-100 text-xs font-mono focus:outline-none focus:border-amber-400" />
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="toggleEditShop()" class="px-3.5 py-1.5 rounded-lg bg-zinc-800 text-zinc-300 font-mono text-xs cursor-pointer hover:bg-zinc-700">Cancel</button>
+        <button type="button" onclick="saveShopEdit()" class="px-4 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono font-semibold text-xs cursor-pointer">Save Updates</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex items-center gap-1.5 border-b border-zinc-800 pb-2 font-mono text-xs overflow-x-auto">
+    <button onclick="switchTab('requests')" id="tab-btn-requests" class="tab-btn px-3 py-1.5 rounded-md transition-colors cursor-pointer bg-zinc-800 text-zinc-100 font-semibold border border-zinc-700">
+      Repair Requests ({{ incoming_requests|length }})
+    </button>
+    <button onclick="switchTab('active')" id="tab-btn-active" class="tab-btn px-3 py-1.5 rounded-md transition-colors cursor-pointer text-zinc-400 hover:text-zinc-200">
+      Active Repairs ({{ active_repairs|length }})
+    </button>
+    <button onclick="switchTab('completed')" id="tab-btn-completed" class="tab-btn px-3 py-1.5 rounded-md transition-colors cursor-pointer text-zinc-400 hover:text-zinc-200">
+      Completed ({{ completed_repairs|length }})
+    </button>
+    <button onclick="switchTab('reviews')" id="tab-btn-reviews" class="tab-btn px-3 py-1.5 rounded-md transition-colors cursor-pointer text-zinc-400 hover:text-zinc-200">
+      Customer Reviews ({{ reviews|length }})
+    </button>
+  </div>
+
+  <!-- Tab Contents -->
+  <div id="tab-requests" class="tab-content space-y-3">
+    {% if not incoming_requests %}
+    <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-8 text-center text-zinc-500 font-mono text-xs">
+      No pending incoming repair requests at this time.
+    </div>
+    {% else %}
+      {% for req in incoming_requests %}
+      <div class="req-card rounded-xl bg-zinc-900 border border-zinc-800 p-5 space-y-4" id="req-{{ req.id }}">
+        <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span class="font-mono text-xs font-semibold text-amber-400 uppercase">New Incoming Repair Request</span>
+          </div>
+          <span class="text-zinc-500 font-mono text-xs">{{ req.createdAt|truncatechars:12 }}</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-2.5 font-mono text-xs">
+            <div>
+              <span class="text-zinc-500 uppercase text-[10px] block">Product</span>
+              <h3 class="font-display font-semibold text-base text-zinc-100 mt-0.5">{{ req.productName }}</h3>
+            </div>
+            <div>
+              <span class="text-zinc-500 uppercase text-[10px] block">Product ID</span>
+              <span class="text-amber-400 font-semibold text-sm">{{ req.productCode }}</span>
+            </div>
+            <div>
+              <span class="text-zinc-500 uppercase text-[10px] block">Reported Issue</span>
+              <span class="text-zinc-200 font-medium">{{ req.issue }}</span>
+              <p class="text-zinc-400 text-xs font-sans mt-0.5">"{{ req.description }}"</p>
+            </div>
+          </div>
+
+          <div class="space-y-2.5 font-mono text-xs">
+            <div class="p-3.5 rounded-lg bg-zinc-950 border border-zinc-800 space-y-1">
+              <div class="flex items-center gap-1.5 text-zinc-300 font-semibold text-[11px]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.29 1.29L3 12l5.8 1.9a2 2 0 0 1 1.29 1.29L12 21l1.9-5.8a2 2 0 0 1 1.29-1.29L21 12l-5.8-1.9a2 2 0 0 1-1.29-1.29L12 3Z"/></svg>
+                <span>AI Diagnostic Assessment</span>
+              </div>
+              <p class="text-zinc-400 text-xs font-sans">Possible thermal/cooling issue. Recommend dual-fan RPM test, heatsink particulate clearance, and OEM thermal paste re-application.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-zinc-800">
+          <button onclick="declineReq('{{ req.id }}')" class="px-3.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-mono text-xs border border-zinc-700 transition-colors cursor-pointer">Decline</button>
+          <button onclick="acceptReq('{{ req.id }}', '{{ req.productCode }}', '{{ req.productName }}')" class="px-4 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono font-semibold text-xs transition-colors cursor-pointer flex items-center gap-1.5">✓ Accept Repair</button>
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <div id="tab-active" class="tab-content space-y-4 hidden">
+    {% if not active_repairs %}
+    <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-8 text-center text-zinc-500 font-mono text-xs" id="empty-active">
+      No active work tickets currently on the bench.
+    </div>
+    {% endif %}
+    
+    <!-- Rendered dynamically or prepopulated -->
+    <div id="active-list" class="space-y-4">
+      {% for req in active_repairs %}
+      <div class="rounded-xl bg-zinc-900 border border-zinc-800 p-5 space-y-4" id="active-{{ req.id }}">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800 pb-3 font-mono text-xs">
+          <div><span class="text-amber-400 font-semibold">{{ req.productCode }}</span> • <span class="text-zinc-200">{{ req.productName }}</span></div>
+          <span class="px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700 text-[10px]">Status: In Diagnostic / Teardown</span>
+        </div>
+        <div class="space-y-3">
+          <div class="space-y-1 font-mono text-xs">
+            <label class="text-zinc-400">Work Performed & Bench Logs</label>
+            <textarea rows="2" class="w-full p-2.5 rounded-lg bg-zinc-950 border border-zinc-700 text-zinc-100 text-xs font-sans focus:border-amber-400 focus:outline-none">Dual-fan assembly replaced and Arctic MX-6 thermal compound applied. Heatsink ultrasonic bath cleared all particulate blockage.</textarea>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
+            <div class="space-y-1">
+              <label class="text-zinc-400">Final Verified Cost (₹)</label>
+              <input type="number" value="3000" class="w-full p-2 rounded-lg bg-zinc-950 border border-zinc-700 text-zinc-100 text-xs font-mono focus:border-amber-400 focus:outline-none" />
+            </div>
+            <div class="space-y-1">
+              <label class="text-zinc-400">Bench Invoice Proof</label>
+              <div class="p-2 rounded-lg bg-zinc-950 border border-zinc-700 text-[11px] text-emerald-400 flex items-center justify-between">
+                <span>TechFix_Thermal_Overhaul.pdf</span> ✓
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-zinc-800">
+          <button onclick="completeReq('{{ req.id }}')" class="px-4 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono font-semibold text-xs flex items-center gap-1.5 transition-colors cursor-pointer">
+            Mark Repair Completed →
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div id="tab-completed" class="tab-content space-y-3 hidden">
+    {% if not completed_repairs %}
+    <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-8 text-center text-zinc-500 font-mono text-xs">
+      No completed work orders recorded yet.
+    </div>
+    {% else %}
+      {% for req in completed_repairs %}
+      <div class="rounded-xl bg-zinc-900 border border-zinc-800 p-4 space-y-3">
+        <div class="flex items-center justify-between font-mono text-xs border-b border-zinc-800 pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="text-amber-400 font-semibold">{{ req.productCode }}</span>
+            <span class="text-zinc-600">•</span>
+            <span class="text-zinc-200 font-medium">{{ req.productName }}</span>
+          </div>
+          <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 text-[10px] font-semibold">✓ Verified</span>
+        </div>
+        <div class="text-xs font-mono text-zinc-300">
+          <span class="text-zinc-500">Work Log: </span> Cooling system rebuild, Arctic MX-6 applied.
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <div id="tab-reviews" class="tab-content space-y-3 hidden">
+    {% if not reviews %}
+    <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-8 text-center text-zinc-500 font-mono text-xs">
+      No customer reviews received yet.
+    </div>
+    {% else %}
+      {% for rev in reviews %}
+      <div class="rounded-xl bg-zinc-900 border border-zinc-800 p-4 space-y-2 font-mono text-xs">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="font-display font-semibold text-zinc-100 text-sm">{{ rev.ownerName }}</span>
+            <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">✓ Verified Work Order</span>
+          </div>
+          <div class="flex items-center gap-1 text-amber-400 font-semibold">
+            ★ <span>{{ rev.rating }}.0</span>
+          </div>
+        </div>
+        <p class="text-zinc-300 font-sans text-xs leading-relaxed">"{{ rev.review }}"</p>
+      </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(el => {
+      el.classList.remove('bg-zinc-800', 'text-zinc-100', 'font-semibold', 'border', 'border-zinc-700');
+      el.classList.add('text-zinc-400');
+    });
+    
+    document.getElementById(`tab-${tab}`).classList.remove('hidden');
+    
+    const activeBtn = document.getElementById(`tab-btn-${tab}`);
+    activeBtn.classList.remove('text-zinc-400');
+    activeBtn.classList.add('bg-zinc-800', 'text-zinc-100', 'font-semibold', 'border', 'border-zinc-700');
+  }
+
+  function toggleEditShop() {
+    const form = document.getElementById('edit-shop-form');
+    form.classList.toggle('hidden');
+  }
+
+  function saveShopEdit() {
+    const avail = document.getElementById('edit-availability').value;
+    const badge = document.getElementById('shop-availability-badge');
+    badge.innerText = avail;
+    if (avail === 'OPEN') {
+      badge.className = 'absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-500 text-zinc-950';
+    } else {
+      badge.className = 'absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-zinc-700 text-zinc-200';
+    }
+    toggleEditShop();
+  }
+
+  function declineReq(id) {
+    const card = document.getElementById(`req-${id}`);
+    if(card) card.remove();
+    updateCounts();
+  }
+
+  function acceptReq(id, code, name) {
+    declineReq(id); // remove from incoming
+    
+    // Add to active
+    const activeList = document.getElementById('active-list');
+    const emptyMsg = document.getElementById('empty-active');
+    if (emptyMsg) emptyMsg.style.display = 'none';
+
+    const html = `
+      <div class="rounded-xl bg-zinc-900 border border-zinc-800 p-5 space-y-4" id="active-${id}">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800 pb-3 font-mono text-xs">
+          <div><span class="text-amber-400 font-semibold">${code}</span> • <span class="text-zinc-200">${name}</span></div>
+          <span class="px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700 text-[10px]">Status: In Diagnostic / Teardown</span>
+        </div>
+        <div class="space-y-3">
+          <div class="space-y-1 font-mono text-xs">
+            <label class="text-zinc-400">Work Performed & Bench Logs</label>
+            <textarea rows="2" class="w-full p-2.5 rounded-lg bg-zinc-950 border border-zinc-700 text-zinc-100 text-xs font-sans focus:border-amber-400 focus:outline-none">Thermal testing initiated.</textarea>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
+            <div class="space-y-1">
+              <label class="text-zinc-400">Final Verified Cost (₹)</label>
+              <input type="number" value="3000" class="w-full p-2 rounded-lg bg-zinc-950 border border-zinc-700 text-zinc-100 text-xs font-mono focus:border-amber-400 focus:outline-none" />
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-zinc-800">
+          <button onclick="completeReq('${id}')" class="px-4 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono font-semibold text-xs flex items-center gap-1.5 transition-colors cursor-pointer">
+            Mark Repair Completed →
+          </button>
+        </div>
+      </div>
+    `;
+    activeList.insertAdjacentHTML('beforeend', html);
+    switchTab('active');
+    updateCounts();
+  }
+
+  function completeReq(id) {
+    const card = document.getElementById(`active-${id}`);
+    if (card) {
+      card.innerHTML = `<div class="p-8 text-center text-emerald-400 font-mono text-sm">✓ Repair completed and blockchain passport verified.</div>`;
+      setTimeout(() => {
+        card.remove();
+        updateCounts();
+        switchTab('completed');
+      }, 1500);
+    }
+  }
+
+  function updateCounts() {
+    // For demo purposes, visually update counts loosely if needed, or rely on page refresh for true state.
+  }
+</script>
+{% endblock %}

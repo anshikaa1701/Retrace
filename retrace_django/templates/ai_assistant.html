@@ -1,0 +1,642 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Voice UI acts as the initial interaction screen -->
+<div id="main-assistant-content" class="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-8 font-sans">
+  
+  <!-- Title -->
+  <div class="text-center space-y-2">
+    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+      <span>NEURAL HARDWARE DIAGNOSTICS</span>
+    </div>
+    <h1 class="font-display font-bold text-3xl sm:text-5xl text-white tracking-tight">
+      What should happen next?
+    </h1>
+    <p class="text-zinc-400 text-sm max-w-lg mx-auto">
+      ReTrace evaluates your device's exact hardware model, previous service history, and symptoms to recommend the optimal circular path.
+    </p>
+  </div>
+
+  <!-- AIChat Interface -->
+  <div class="space-y-8 font-sans">
+    
+    <!-- Product Selector Header Strip -->
+    <div class="rounded-2xl p-4 sm:p-5 border border-white/10 bg-zinc-900/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-md">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+        </div>
+        <div>
+          <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider block">DIAGNOSTIC TARGET</span>
+          <h3 id="current-target-name" class="font-display font-semibold text-white text-base">
+            {{ selected_product.brand }} {{ selected_product.model }}
+          </h3>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-mono text-zinc-500 hidden sm:inline">SWITCH DEVICE:</span>
+        <select id="product-selector" class="p-2 bg-zinc-800 border border-white/10 rounded-xl text-xs font-mono text-white focus:border-emerald-500/50 focus:outline-none">
+          {% for product in products %}
+          <option value="{{ product.productId }}" {% if product.productId == selected_product.productId %}selected{% endif %}>
+            {{ product.productId }} — {{ product.brand }} {{ product.model }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <!-- Chat Messages Log -->
+    <div class="rounded-2xl border border-white/10 bg-zinc-950/80 overflow-hidden flex flex-col h-[520px]">
+      
+      <!-- Chat Stream Header -->
+      <div class="p-3.5 bg-zinc-900/90 border-b border-white/10 flex items-center justify-between text-xs font-mono">
+        <div class="flex items-center gap-2 text-zinc-300">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          <span>AI DIAGNOSTIC SESSION</span>
+        </div>
+        <span id="synced-passport" class="text-[11px] text-zinc-500">
+          PASSPORT SYNCED: {{ selected_product.productId }}
+        </span>
+      </div>
+
+      <!-- Message Bubble List -->
+      <div id="chat-messages" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+        
+        <!-- Welcome Message -->
+        <div class="flex flex-col items-start">
+          <div class="max-w-2xl rounded-2xl p-4 text-xs sm:text-sm leading-relaxed bg-zinc-800/90 text-zinc-200 border border-white/10 rounded-bl-sm">
+            <div class="flex items-center justify-between gap-4 mb-2 text-[10px] font-mono text-zinc-500">
+              <div>
+                <span class="text-cyan-400">RETRACE INTELLIGENCE</span>
+                <button onclick="playTTS(this)" data-text="Hello, I am the ReTrace Circular Intelligence Engine. Select a registered product and describe symptoms to assess repairability, replacement costs, and circular pathways." class="ml-2 text-zinc-400 hover:text-cyan-400 transition-colors" title="Read Aloud">
+                  <svg class="w-3.5 h-3.5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h2l4 4V4L9 8H7a2 2 0 00-2 2z"></path></svg>
+                </button>
+              </div>
+              <span>SYSTEM</span>
+            </div>
+            <div class="space-y-1">Hello, I am the ReTrace Circular Intelligence Engine. Select a registered product and describe symptoms to assess repairability, replacement costs, and circular pathways.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Loading State -->
+      <div id="loading-indicator" class="hidden p-4">
+        <div class="flex items-center gap-3 text-xs font-mono text-zinc-400 bg-zinc-800/50 p-3 rounded-xl w-fit mx-auto">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin text-emerald-400"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          <span>Analyzing hardware profile + previous service records...</span>
+        </div>
+      </div>
+
+      <!-- Suggested Quick Symptoms Chips -->
+      <div class="p-3 bg-zinc-900/40 border-t border-white/5 overflow-x-auto flex items-center gap-2">
+        <span class="text-[10px] font-mono text-zinc-500 uppercase flex-shrink-0">PROMPTS:</span>
+        <button onclick="sendQuickPrompt('My laptop is overheating and shutting down.')" class="px-2.5 py-1 rounded-full bg-zinc-800 hover:bg-zinc-700 border border-white/10 text-zinc-300 hover:text-emerald-300 text-[11px] whitespace-nowrap transition-colors cursor-pointer">
+          My laptop is overheating and shutting down.
+        </button>
+        <button onclick="sendQuickPrompt('Battery drains in 30 minutes.')" class="px-2.5 py-1 rounded-full bg-zinc-800 hover:bg-zinc-700 border border-white/10 text-zinc-300 hover:text-emerald-300 text-[11px] whitespace-nowrap transition-colors cursor-pointer">
+          Battery drains in 30 minutes.
+        </button>
+      </div>
+
+      <!-- Input Bar -->
+      <form id="chat-form" onsubmit="event.preventDefault(); submitChat();" class="p-3 bg-zinc-900/90 border-t border-white/10 flex items-center gap-2">
+        <button type="button" onclick="openVoiceModal()" class="px-3 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors border border-white/10 flex-shrink-0 cursor-pointer" title="Voice Conversation">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+        </button>
+        <input type="text" id="chat-input" placeholder="Describe hardware symptoms (e.g. overheating and shutting down)..." class="flex-1 px-4 py-2.5 bg-zinc-800 border border-white/10 rounded-xl text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 transition-colors font-mono" />
+        <button type="submit" id="chat-submit" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono text-xs font-semibold flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)] disabled:opacity-40 cursor-pointer">
+          <span>ANALYZE</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Downstream Next Path & Comparison Section -->
+    <div id="assessment-panel" class="hidden space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
+      <!-- We will mount the react components or inject the HTML result here -->
+      <div id="repair-vs-replacement-chart-mount"></div>
+      <div id="next-path-card-mount"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let isAnalyzing = false;
+  
+  function getSelectedProduct() {
+    const selector = document.getElementById('product-selector');
+    return selector.options[selector.selectedIndex].value;
+  }
+  
+  document.getElementById('product-selector').addEventListener('change', function(e) {
+    document.getElementById('synced-passport').innerText = `PASSPORT SYNCED: ${e.target.value}`;
+    const text = e.target.options[e.target.selectedIndex].text;
+    document.getElementById('current-target-name').innerText = text.split(' — ')[1];
+  });
+  
+  function createMessageNode(text, sender) {
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const div = document.createElement('div');
+    div.className = `flex flex-col ${sender === 'user' ? 'items-end' : 'items-start'} mb-4 opacity-0`;
+    div.style.animation = 'staggerFadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+    
+    const innerClass = sender === 'user' 
+      ? 'bg-emerald-500/20 text-emerald-100 border border-emerald-500/30 rounded-br-sm'
+      : 'bg-zinc-800/90 text-zinc-200 border border-white/10 rounded-bl-sm';
+      
+    const headerColor = sender === 'user' ? 'text-emerald-400' : 'text-cyan-400';
+    const senderName = sender === 'user' ? 'YOU' : 'RETRACE INTELLIGENCE';
+    
+    // Simple markdown formatting
+    let formattedText = text
+      .replace(/### (.*?)\n/g, '<h3 class="text-sm font-semibold text-white mb-2">$1</h3>')
+      .replace(/#### (.*?)\n/g, '<h4 class="text-[11px] text-cyan-400 mt-3 mb-1 uppercase tracking-wider">$1</h4>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em class="text-zinc-300">$1</em>')
+      .replace(/\n/g, '<br/>');
+
+    // Add TTS button only for AI messages
+    const ttsButton = sender === 'ai' 
+      ? `<button onclick="playTTS(this)" data-text="${encodeURIComponent(text)}" class="ml-2 text-zinc-400 hover:text-cyan-400 transition-colors" title="Read Aloud">
+           <svg class="w-3.5 h-3.5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h2l4 4V4L9 8H7a2 2 0 00-2 2z"></path></svg>
+         </button>` 
+      : '';
+
+    div.innerHTML = `
+      <div class="max-w-2xl rounded-2xl p-4 text-xs sm:text-sm leading-relaxed ${innerClass}">
+        <div class="flex items-center justify-between gap-4 mb-2 text-[10px] font-mono text-zinc-500">
+          <div><span class="${headerColor}">${senderName}</span>${ttsButton}</div>
+          <span>${time}</span>
+        </div>
+        <div class="space-y-1">${formattedText}</div>
+      </div>
+    `;
+    return div;
+  }
+  
+  // Global tracker to ensure only one TTS plays at a time
+  window.currentActiveTTSBtn = null;
+
+  async function playTTS(buttonEl) {
+    // If THIS button is already playing or fetching, stop/cancel it
+    if (buttonEl === window.currentActiveTTSBtn) {
+      if (buttonEl.audioObj) {
+        buttonEl.audioObj.pause();
+        buttonEl.audioObj = null;
+      }
+      buttonEl.innerHTML = buttonEl.originalContent;
+      buttonEl.isFetchingTTS = false;
+      window.currentActiveTTSBtn = null;
+      return;
+    }
+    
+    // If another button is playing, stop it first
+    if (window.currentActiveTTSBtn) {
+      const prevBtn = window.currentActiveTTSBtn;
+      if (prevBtn.audioObj) {
+        prevBtn.audioObj.pause();
+        prevBtn.audioObj = null;
+      }
+      prevBtn.innerHTML = prevBtn.originalContent;
+      prevBtn.isFetchingTTS = false;
+    }
+    
+    if (buttonEl.disabled) return;
+    
+    buttonEl.originalContent = buttonEl.innerHTML;
+    buttonEl.innerHTML = `<svg class="w-3.5 h-3.5 inline-block animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>`;
+    buttonEl.isFetchingTTS = true;
+    window.currentActiveTTSBtn = buttonEl;
+    
+    try {
+      const textToSpeak = decodeURIComponent(buttonEl.getAttribute('data-text'));
+      
+      const response = await fetch('/api/ai/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: textToSpeak })
+      });
+      
+      if (!response.ok) throw new Error('TTS failed');
+      
+      const blob = await response.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      
+      // If the user cancelled this button while it was fetching, abort playing
+      if (window.currentActiveTTSBtn !== buttonEl) {
+        return;
+      }
+
+      buttonEl.audioObj = audio;
+      buttonEl.isFetchingTTS = false;
+      
+      audio.onended = () => {
+        URL.revokeObjectURL(audioUrl);
+        buttonEl.innerHTML = buttonEl.originalContent;
+        buttonEl.audioObj = null;
+        if (window.currentActiveTTSBtn === buttonEl) {
+          window.currentActiveTTSBtn = null;
+        }
+      };
+      
+      buttonEl.innerHTML = `<svg class="w-3.5 h-3.5 inline-block text-cyan-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h2l4 4V4L9 8H7a2 2 0 00-2 2z"></path></svg>`;
+      
+      await audio.play();
+    } catch (err) {
+      console.error(err);
+      if (window.currentActiveTTSBtn === buttonEl) {
+        buttonEl.innerHTML = buttonEl.originalContent;
+        buttonEl.audioObj = null;
+        buttonEl.isFetchingTTS = false;
+        window.currentActiveTTSBtn = null;
+      }
+    }
+  }
+  
+
+  
+  function createAssessmentNode(action) {
+    const div = document.createElement('div');
+    div.className = "mt-4 pt-4 border-t border-white/10 space-y-3 font-mono";
+    
+    const actionsHtml = action.suggestedActions 
+      ? action.suggestedActions.map(a => `
+          <a href="${a.link}" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-mono font-medium transition-all cursor-pointer">
+            ${a.label}
+          </a>
+        `).join('')
+      : `<button onclick="document.getElementById('assessment-panel').classList.remove('hidden')" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-mono font-medium transition-all cursor-pointer">CHECK REPAIRABILITY</button>
+         <a href="/repairers" class="px-3 py-1.5 rounded-lg bg-zinc-700 hover:bg-zinc-600 border border-white/10 text-cyan-300 text-xs font-mono font-medium transition-all cursor-pointer">FIND REPAIRER</a>`;
+         
+    div.innerHTML = `
+      <div class="grid grid-cols-2 gap-2">
+        <div class="p-2.5 rounded-lg bg-zinc-700/80 border border-white/5">
+          <span class="text-[9px] text-zinc-500 block uppercase">LIKELY ISSUE</span>
+          <span class="text-white text-xs font-semibold">${action.likelyIssue || 'Unknown'}</span>
+        </div>
+        <div class="p-2.5 rounded-lg bg-zinc-700/80 border border-white/5">
+          <span class="text-[9px] text-zinc-500 block uppercase">CONFIDENCE</span>
+          <span class="text-emerald-400 text-xs font-semibold">${action.confidence || 'Moderate'}</span>
+        </div>
+        <div class="p-2.5 rounded-lg bg-zinc-700/80 border border-white/5 col-span-2">
+          <span class="text-[9px] text-zinc-500 block uppercase">NEXT SAFE CHECK</span>
+          <span class="text-cyan-400 text-xs font-semibold">${action.nextSafeCheck || 'Monitor device operating temperature'}</span>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2 pt-1">
+        ${actionsHtml}
+      </div>
+    `;
+    return div;
+  }
+  
+  function sendQuickPrompt(text) {
+    document.getElementById('chat-input').value = text;
+    submitChat();
+  }
+  
+  async function submitChat() {
+    if (isAnalyzing) return;
+    const inputEl = document.getElementById('chat-input');
+    const text = inputEl.value.trim();
+    if (!text) return;
+    
+    // Add User Message
+    const chatBox = document.getElementById('chat-messages');
+    chatBox.appendChild(createMessageNode(text, 'user'));
+    inputEl.value = '';
+    
+    // Scroll down
+    chatBox.scrollTop = chatBox.scrollHeight;
+    
+    // Setup Loading
+    isAnalyzing = true;
+    document.getElementById('chat-submit').disabled = true;
+    document.getElementById('loading-indicator').classList.remove('hidden');
+    document.getElementById('assessment-panel').classList.add('hidden');
+    
+      try {
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          productId: getSelectedProduct()
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.structuredAction) {
+        // Use marked.js or just render the markdown reply directly (fallback to text)
+        const replyText = data.reply || 'Analysis complete.';
+        const aiNode = createMessageNode(replyText, 'ai');
+        const bubble = aiNode.querySelector('.max-w-2xl');
+        bubble.appendChild(createAssessmentNode(data.structuredAction));
+        chatBox.appendChild(aiNode);
+      } else if (data.reply) {
+        chatBox.appendChild(createMessageNode(data.reply, 'ai'));
+      } else {
+        chatBox.appendChild(createMessageNode(data.error || 'An error occurred while fetching the diagnosis.', 'ai'));
+      }
+      
+    } catch (err) {
+      chatBox.appendChild(createMessageNode('Network error. Please try again.', 'ai'));
+    } finally {
+      isAnalyzing = false;
+      document.getElementById('chat-submit').disabled = false;
+      document.getElementById('loading-indicator').classList.add('hidden');
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  }
+  
+  // Auto init
+  window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const promptParam = urlParams.get('prompt');
+    if (promptParam) {
+      const initPrompt = promptParam === 'overheating' ? 'My laptop is overheating and shutting down.' : promptParam;
+      document.getElementById('chat-input').value = initPrompt;
+      submitChat();
+    }
+  };
+</script>
+
+
+<!-- Full Conversational AI Modal -->
+<!-- Full Conversational AI Modal -->
+<!-- Hidden on load. Triggered by the mic icon in chat. -->
+<div id="voice-modal" class="hidden opacity-0 fixed inset-0 z-[9999] flex-col items-center justify-center transition-all duration-500 premium-voice-bg">
+  
+  <!-- Close Modal Button -->
+  <button onclick="closeVoiceModal()" style="position: absolute; top: 1.5rem; right: 1.5rem; padding: 0.5rem; color: rgba(255,255,255,0.5); background-color: rgba(0,0,0,0.2); border-radius: 9999px; z-index: 50; cursor: pointer; border: none;" onmouseover="this.style.color='#fff'; this.style.backgroundColor='rgba(0,0,0,0.4)';" onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.backgroundColor='rgba(0,0,0,0.2)';" title="Exit Voice Chat">
+    <svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+  </button>
+
+  <div style="position: relative; display: flex; flex-direction: column; align-items: center; z-index: 10; width: 100%; max-width: 32rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <p id="voice-status-text" style="font-size: 0.875rem; font-family: monospace; color: #a1a1aa; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; transition: opacity 0.3s; opacity: 1;">TAP MIC TO START</p>
+    </div>
+
+    <!-- The Animated Orb -->
+    <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 16rem; height: 16rem; margin-bottom: 4rem; cursor: pointer;" onclick="document.getElementById('voice-stop-btn').click()" title="Stop Conversation">
+      <div id="voice-orb" style="position: absolute; width: 12rem; height: 12rem; border-radius: 9999px; transition: all 0.1s;
+              background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9) 0%, transparent 50%),
+              linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #22d3ee 100%);
+              box-shadow: 0 0 60px 20px rgba(34, 211, 238, 0.4), inset 20px 20px 40px rgba(255, 255, 255, 0.6);
+              filter: blur(1px); transform: scale(1);">
+      </div>
+      <div id="voice-aura" class="spin-aura" style="position: absolute; width: 16rem; height: 16rem; border-radius: 9999px; opacity: 0.5; mix-blend-mode: multiply; transition: all 0.3s;
+           background: conic-gradient(from 90deg, #10b981, #3b82f6, #22d3ee, #10b981); filter: blur(25px);"></div>
+    </div>
+
+    <!-- Controls -->
+    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5rem; height: 5rem;">
+      <!-- Start / Mic Button -->
+      <button id="voice-mic-btn" style="width: 5rem; height: 5rem; border-radius: 9999px; background-color: transparent; border: 2px solid rgba(255,255,255,0.4); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); cursor: pointer; transition: all 0.3s;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'; this.style.transform='scale(1.05)';" onmouseout="this.style.backgroundColor='transparent'; this.style.transform='scale(1)';" title="Tap to Speak">
+        <svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+      </button>
+
+      <!-- Stop / Cross Button (Hidden initially) -->
+      <button id="voice-stop-btn" style="width: 5rem; height: 5rem; border-radius: 9999px; background-color: #ef4444; color: white; display: none; align-items: center; justify-content: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); cursor: pointer; transition: all 0.3s; border: none;" onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='scale(1.05)';" onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='scale(1)';" title="Stop">
+        <svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes spinAura { 100% { transform: rotate(360deg); } }
+.spin-aura { animation: spinAura 6s linear infinite; }
+
+/* Premium Organic Gradient Background */
+.premium-voice-bg {
+  /* To use the exact image file, save it to your static folder and uncomment below: */
+  /* background: url('{% static "images/ai_bg.png" %}') center/cover no-repeat !important; */
+  
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(220, 200, 255, 0.8) 0%, transparent 60%),
+    radial-gradient(circle at 90% 10%, rgba(255, 230, 245, 0.8) 0%, transparent 60%),
+    radial-gradient(circle at 50% 90%, rgba(210, 230, 255, 0.8) 0%, transparent 60%),
+    linear-gradient(135deg, #f5efff 0%, #e6f0ff 50%, #fff0f5 100%) !important;
+  background-size: cover;
+  backdrop-filter: blur(10px);
+}
+
+@keyframes organicBgShift {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+/* Ensure no header, footer, or background interrupts the immersive voice experience on this page */
+html, body {
+  background-color: transparent !important;
+}
+header, footer, nav { 
+  display: none !important; 
+}
+</style>
+
+<script type="module">
+  console.log("Custom Voice AI module loaded with resilient state machine.");
+
+  // Expose global functions for the HTML onclick handlers
+  window.openVoiceModal = function() {
+    const modal = document.getElementById('voice-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    setTimeout(() => {
+      modal.classList.remove('opacity-0');
+      modal.classList.add('opacity-100');
+    }, 10);
+  };
+
+  window.closeVoiceModal = function() {
+    // End conversation if active
+    const stopBtn = document.getElementById('voice-stop-btn');
+    if (stopBtn && stopBtn.style.display !== 'none') {
+      stopBtn.click();
+    }
+    
+    const modal = document.getElementById('voice-modal');
+    modal.classList.remove('opacity-100');
+    modal.classList.add('opacity-0');
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }, 500);
+  };
+
+  let currentVoiceState = 'IDLE'; // IDLE, LISTENING, THINKING, SPEAKING
+  let isVoiceSessionActive = false;
+  let isMicActuallyListening = false;
+  window.currentVoiceAudio = null;
+  let animationId = null;
+  const fallbackAudioLevel = 0.5;
+  
+  const micBtn = document.getElementById('voice-mic-btn');
+  const stopBtn = document.getElementById('voice-stop-btn');
+  const statusText = document.getElementById('voice-status-text');
+  const orb = document.getElementById('voice-orb');
+
+  import { Conversation } from 'https://esm.sh/@11labs/client@0.2.0';
+
+  let conversationSession = null;
+
+  function updateUI() {
+    if (currentVoiceState === 'IDLE') {
+      micBtn.style.display = 'flex';
+      stopBtn.style.display = 'none';
+      statusText.innerText = 'TAP MIC TO START';
+      statusText.style.color = '#a1a1aa'; // text-zinc-400
+      
+      // Reset orb
+      orb.style.transform = 'scale(1)';
+      orb.style.boxShadow = '0 0 60px 20px rgba(34, 211, 238, 0.4), inset 20px 20px 40px rgba(255, 255, 255, 0.6)';
+    } else if (currentVoiceState === 'LISTENING') {
+      micBtn.style.display = 'none';
+      stopBtn.style.display = 'flex';
+      statusText.innerText = 'LISTENING...';
+      statusText.style.color = '#10b981'; // text-emerald-500
+    } else if (currentVoiceState === 'THINKING') {
+      micBtn.style.display = 'none';
+      stopBtn.style.display = 'flex';
+      statusText.innerText = 'CONNECTING...';
+      statusText.style.color = '#8b5cf6'; // text-purple-500
+    } else if (currentVoiceState === 'SPEAKING') {
+      micBtn.style.display = 'none';
+      stopBtn.style.display = 'flex';
+      statusText.innerText = 'SPEAKING...';
+      statusText.style.color = '#3b82f6'; // text-blue-500
+    }
+  }
+
+  function animateOrb() {
+    if (currentVoiceState === 'IDLE') {
+      cancelAnimationFrame(animationId);
+      return;
+    }
+    
+    animationId = requestAnimationFrame(animateOrb);
+    
+    let intensity = fallbackAudioLevel;
+    const time = Date.now() / 200;
+    
+    if (currentVoiceState === 'LISTENING') {
+      intensity = 0.3 + (Math.sin(time * 0.5) * 0.1);
+      const scale = 1 + intensity * 0.5;
+      orb.style.transform = `scale(${scale})`;
+      const glowStr = 20 + intensity * 150;
+      orb.style.boxShadow = `0 0 ${glowStr}px ${glowStr/2}px rgba(16, 185, 129, 0.7), inset 20px 20px 40px rgba(255, 255, 255, 0.8)`;
+    } else if (currentVoiceState === 'SPEAKING') {
+      intensity = 0.4 + (Math.sin(time * 1.5) * 0.3);
+      const scale = 1 + intensity * 0.5;
+      orb.style.transform = `scale(${scale})`;
+      const glowStr = 20 + intensity * 150;
+      orb.style.boxShadow = `0 0 ${glowStr}px ${glowStr/2}px rgba(59, 130, 246, 0.7), inset 20px 20px 40px rgba(255, 255, 255, 0.8)`;
+    } else if (currentVoiceState === 'THINKING') {
+      intensity = 0.5 + (Math.sin(time * 2) * 0.2);
+      const scale = 1 + intensity * 0.3;
+      orb.style.transform = `scale(${scale})`;
+      const glowStr = 20 + intensity * 100;
+      orb.style.boxShadow = `0 0 ${glowStr}px ${glowStr/2}px rgba(139, 92, 246, 0.7), inset 20px 20px 40px rgba(255, 255, 255, 0.8)`;
+    }
+  }
+
+  micBtn.addEventListener('click', async () => {
+    console.log("[VoicePipeline] Requesting microphone permission...");
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log("[VoicePipeline] Microphone permission granted. Mic ready.");
+    } catch(e) {
+      console.error("[VoicePipeline] Microphone permission denied.", e);
+      alert("Microphone permission denied. Please allow microphone access to use voice chat.");
+      return;
+    }
+    
+    isVoiceSessionActive = true;
+    currentVoiceState = 'THINKING';
+    updateUI();
+    animateOrb();
+    
+    try {
+      console.log("[VoicePipeline] Fetching signed URL from backend...");
+      const response = await fetch('/api/ai/token');
+      const data = await response.json();
+      
+      if (!data.signed_url) throw new Error("No signed url returned");
+      console.log("[VoicePipeline] Signed URL obtained successfully.");
+      
+      console.log("[VoicePipeline] Connecting to ElevenLabs Conversational AI...");
+      conversationSession = await Conversation.startSession({
+        signedUrl: data.signed_url,
+        onConnect: () => {
+          console.log("[VoicePipeline] Conversation connection active. Agent ready.");
+          currentVoiceState = 'LISTENING';
+          updateUI();
+        },
+        onDisconnect: () => {
+          console.log("[VoicePipeline] Conversation disconnected.");
+          isVoiceSessionActive = false;
+          currentVoiceState = 'IDLE';
+          updateUI();
+        },
+        onError: (error) => {
+          console.error('[VoicePipeline] Connection/STT error:', error);
+          isVoiceSessionActive = false;
+          currentVoiceState = 'IDLE';
+          updateUI();
+        },
+        onModeChange: (mode) => {
+          console.log(`[VoicePipeline] Mode changed to: ${mode}`);
+          if (mode === 'speaking') {
+             console.log("[VoicePipeline] Agent response started.");
+             currentVoiceState = 'SPEAKING';
+          } else {
+             console.log("[VoicePipeline] Listening for user speech / Agent response completed.");
+             currentVoiceState = 'LISTENING';
+          }
+          updateUI();
+        },
+        onMessage: (message) => {
+           console.log(`[VoicePipeline] Transcript received from ${message.source}: "${message.message}"`);
+           const chatBox = document.getElementById('chat-messages');
+           chatBox.appendChild(createMessageNode(message.message, message.source));
+           chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      });
+    } catch (err) {
+      console.error('[VoicePipeline] Pipeline initialization failed:', err);
+      isVoiceSessionActive = false;
+      currentVoiceState = 'IDLE';
+      updateUI();
+      alert('Failed to connect to voice assistant.');
+    }
+  });
+
+  stopBtn.addEventListener('click', async () => {
+    isVoiceSessionActive = false;
+    currentVoiceState = 'IDLE';
+    
+    if (conversationSession) {
+      await conversationSession.endSession();
+      conversationSession = null;
+    }
+    
+    cancelAnimationFrame(animationId);
+    updateUI();
+  });
+
+  // Ensure initial UI state
+  updateUI();
+</script>
+
+
+
+</div>
+{% endblock %}

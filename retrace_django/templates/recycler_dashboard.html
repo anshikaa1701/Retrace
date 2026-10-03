@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6 font-sans">
+  
+  <!-- Header Banner -->
+  <div class="rounded-xl p-6 bg-zinc-900 border border-zinc-800">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><path d="M7 15.3 3.4 9 12 3.3z"/><path d="M13.8 21.4 7 15.3l8.6-5.7z"/><path d="M20.6 9 13.8 21.4l-5.2-12.1z"/></svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-display font-semibold text-xl text-zinc-100">
+              GreenCycle Circular Facility
+            </h1>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono">
+              ✓ R2v3 Certified
+            </span>
+          </div>
+          <p class="text-xs font-mono text-zinc-400 mt-0.5">
+            Peenya Industrial Zone • Hydrometallurgical E-Waste Smelting
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metrics Strip -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-zinc-800 font-mono">
+      <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[10px] text-zinc-500 uppercase block">Pending Pickups</span>
+        <span class="text-lg font-bold text-amber-400" id="stat-pending">{{ pending_requests|length }}</span>
+      </div>
+
+      <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[10px] text-zinc-500 uppercase block">Logistics Fleet</span>
+        <span class="text-lg font-bold text-zinc-100" id="stat-logistics">0</span>
+      </div>
+
+      <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[10px] text-zinc-500 uppercase block">Smelted & Certified</span>
+        <span class="text-lg font-bold text-emerald-400" id="stat-smelted">{{ verified_recoveries|length|add:184 }}</span>
+      </div>
+
+      <div class="p-3 rounded-lg bg-zinc-950/60 border border-zinc-800/80">
+        <span class="text-[10px] text-zinc-500 uppercase block">Diversion Rate</span>
+        <span class="text-lg font-bold text-zinc-100">99.8%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex items-center gap-1.5 border-b border-zinc-800 pb-2 font-mono text-xs">
+    <button onclick="switchTab('requests')" id="tab-btn-requests" class="tab-btn px-3 py-1.5 rounded-md transition-colors cursor-pointer bg-zinc-800 text-zinc-100 font-semibold border border-zinc-700">
+      Dispatched Pickups (<span id="dispatch-count">{{ pending_requests|length }}</span>)
+    </button>
+    <button onclick="switchTab('collected')" id="tab-btn-collected" class="tab-btn px-3 py-1.5 rounded-md transition-colors cursor-pointer text-zinc-400 hover:text-zinc-200">
+      Certified End-of-Life Assets (<span id="cert-count">{{ verified_recoveries|length }}</span>)
+    </button>
+  </div>
+
+  <!-- Tab 1: Recovery Pickups -->
+  <div id="tab-requests" class="tab-content space-y-4">
+    {% if not pending_requests %}
+    <div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-10 text-center text-zinc-500 font-mono text-xs" id="empty-requests">
+      No pending recovery pickups.
+    </div>
+    {% else %}
+    <div id="empty-requests" class="hidden rounded-xl border border-zinc-800 bg-zinc-900/60 p-10 text-center text-zinc-500 font-mono text-xs">
+      No pending recovery pickups.
+    </div>
+      {% for req in pending_requests %}
+      <div id="req-{{ req.id }}" class="rounded-xl bg-zinc-900 border border-zinc-800 p-5 space-y-4 transition-all">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800 pb-3">
+          <div>
+            <span class="text-[10px] font-mono text-amber-400 uppercase tracking-wider block">
+              Dispatch #{{ req.id|slice:"-6:"|upper }}
+            </span>
+            <h3 class="font-display font-semibold text-base text-zinc-100">
+              {{ req.productName }} ({{ req.productCode }})
+            </h3>
+          </div>
+
+          <span id="status-badge-{{ req.id }}" class="px-2.5 py-0.5 rounded text-[11px] font-mono self-start sm:self-center bg-amber-500/10 border border-amber-500/20 text-amber-400">
+            STATUS: {{ req.status }}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
+          <div class="p-3 bg-zinc-950/50 border border-zinc-800/80 rounded-lg">
+            <span class="text-[10px] text-zinc-500 block uppercase">Condition Report</span>
+            <span class="text-zinc-300">{{ req.condition }}</span>
+          </div>
+          <div class="p-3 bg-zinc-950/50 border border-zinc-800/80 rounded-lg">
+            <span class="text-[10px] text-zinc-500 block uppercase">Pickup Address</span>
+            <span class="text-zinc-300 truncate block">{{ req.pickupAddress }}</span>
+          </div>
+          <div class="p-3 bg-zinc-950/50 border border-zinc-800/80 rounded-lg">
+            <span class="text-[10px] text-zinc-500 block uppercase">Circular Value</span>
+            <span class="text-emerald-400 font-semibold">₹{{ req.estimatedValue }}</span>
+          </div>
+        </div>
+
+        <div id="action-accept-{{ req.id }}">
+          <button onclick="acceptPickup('{{ req.id }}')" class="px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-zinc-950 font-mono text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+            <span>Accept Pickup & Dispatch Logistics</span>
+          </button>
+        </div>
+
+        <div id="action-verify-{{ req.id }}" class="hidden space-y-3 pt-1">
+          <!-- Simulated Proof Upload -->
+          <div class="p-3.5 rounded-lg bg-zinc-950/60 border border-dashed border-zinc-700 flex items-center justify-between font-mono text-xs">
+            <div class="flex items-center gap-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
+              <div>
+                <div class="text-zinc-200 font-medium">GreenCycle_Destruction_And_Smelt_Certificate_R2v3.pdf</div>
+                <div class="text-[10px] text-zinc-500">R2v3 Zero-Landfill Compliant • Proof of Smelt</div>
+              </div>
+            </div>
+            <span class="text-[11px] text-emerald-400">Ready to Mint ✓</span>
+          </div>
+
+          <div class="flex items-center justify-end">
+            <button onclick="verifyRecovery('{{ req.id }}', '{{ req.productCode }}', '{{ req.productName }}')" class="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              <span>Verify Recovery & Close Lifecycle</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <!-- Tab 2: Certified End of Life -->
+  <div id="tab-collected" class="tab-content space-y-3 hidden">
+    <div id="collected-list" class="space-y-3">
+      {% if not verified_recoveries %}
+      <div id="empty-collected" class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-10 text-center text-zinc-500 font-mono text-xs">
+        No certified end-of-life assets yet.
+      </div>
+      {% else %}
+        <div id="empty-collected" class="hidden rounded-xl border border-zinc-800 bg-zinc-900/60 p-10 text-center text-zinc-500 font-mono text-xs">
+          No certified end-of-life assets yet.
+        </div>
+      {% endif %}
+      
+      {% for req in verified_recoveries %}
+      <!-- Mock pre-populated verified recoveries can go here if needed -->
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let pendingCount = {{ pending_requests|length }};
+  let logisticsCount = 0;
+  let certifiedCount = {{ verified_recoveries|length }};
+  let baseSmelted = 184;
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(el => {
+      el.classList.remove('bg-zinc-800', 'text-zinc-100', 'font-semibold', 'border', 'border-zinc-700');
+      el.classList.add('text-zinc-400');
+    });
+    
+    document.getElementById(`tab-${tab}`).classList.remove('hidden');
+    
+    const activeBtn = document.getElementById(`tab-btn-${tab}`);
+    activeBtn.classList.remove('text-zinc-400');
+    activeBtn.classList.add('bg-zinc-800', 'text-zinc-100', 'font-semibold', 'border', 'border-zinc-700');
+  }
+
+  function acceptPickup(id) {
+    const badge = document.getElementById(`status-badge-${id}`);
+    badge.innerText = 'STATUS: ACCEPTED';
+    badge.classList.remove('bg-amber-500/10', 'border-amber-500/20', 'text-amber-400');
+    badge.classList.add('bg-emerald-500/10', 'border-emerald-500/20', 'text-emerald-400');
+
+    document.getElementById(`action-accept-${id}`).classList.add('hidden');
+    document.getElementById(`action-verify-${id}`).classList.remove('hidden');
+
+    pendingCount--;
+    logisticsCount++;
+    document.getElementById('stat-pending').innerText = pendingCount;
+    document.getElementById('stat-logistics').innerText = logisticsCount;
+  }
+
+  function verifyRecovery(id, code, name) {
+    document.getElementById(`req-${id}`).remove();
+    
+    logisticsCount--;
+    certifiedCount++;
+    
+    document.getElementById('stat-logistics').innerText = logisticsCount;
+    document.getElementById('stat-smelted').innerText = certifiedCount + baseSmelted;
+    document.getElementById('dispatch-count').innerText = pendingCount + logisticsCount;
+    document.getElementById('cert-count').innerText = certifiedCount;
+
+    if(pendingCount + logisticsCount === 0) {
+      document.getElementById('empty-requests').classList.remove('hidden');
+    }
+
+    document.getElementById('empty-collected').classList.add('hidden');
+
+    const html = `
+      <div class="rounded-xl bg-zinc-900 border border-zinc-800 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in">
+        <div>
+          <div class="flex items-center gap-2 font-mono text-xs mb-1">
+            <span class="text-amber-400 font-medium">${code}</span>
+            <span class="text-zinc-600">•</span>
+            <span class="text-zinc-200">${name}</span>
+            <span class="px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700 text-[10px]">✓ End of Life Certified</span>
+          </div>
+          <h4 class="font-display font-semibold text-zinc-100 text-sm">R2v3 Closed Loop Smelting Verified</h4>
+          <p class="text-xs text-zinc-400 mt-0.5">Gold, copper and silicon recovered. Certificate of Destruction permanently appended.</p>
+        </div>
+        <a href="/dashboard" class="px-3.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700/80 border border-zinc-700 text-zinc-200 text-xs font-mono font-medium flex items-center gap-1.5 self-start sm:self-auto transition-colors">
+          <span>View Closed Passport</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    `;
+
+    document.getElementById('collected-list').insertAdjacentHTML('afterbegin', html);
+    switchTab('collected');
+  }
+</script>
+{% endblock %}

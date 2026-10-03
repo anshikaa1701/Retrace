@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-4xl">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-[#800020] mb-4">Smart Resale Value Estimator</h1>
+    <p class="text-[#9A2A2A]">Enter your product details to get an estimated resale range based on age, condition, and repair history. Resell it before it becomes e-waste!</p>
+  </div>
+
+  <div class="bg-[#EBF5EB] border border-[#C3E6CB] rounded-2xl p-6 sm:p-10 shadow-lg relative overflow-hidden">
+    <form id="estimator-form" class="relative z-10 space-y-6">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[#800020] uppercase tracking-wide">Product Model</label>
+          <input type="text" id="product-model" required placeholder="e.g. iPhone 13, ThinkPad T14" class="w-full px-4 py-3 bg-white border border-[#C3E6CB] rounded-xl text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#800020] focus:border-transparent transition-all" />
+        </div>
+        
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[#800020] uppercase tracking-wide">Device Age</label>
+          <select id="device-age" class="w-full px-4 py-3 bg-white border border-[#C3E6CB] rounded-xl text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#800020] focus:border-transparent transition-all">
+            <option value="1">Less than 1 year</option>
+            <option value="2">1 - 2 years</option>
+            <option value="3">3 - 4 years</option>
+            <option value="5">5+ years</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[#800020] uppercase tracking-wide">Condition</label>
+          <select id="device-condition" class="w-full px-4 py-3 bg-white border border-[#C3E6CB] rounded-xl text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#800020] focus:border-transparent transition-all">
+            <option value="excellent">Excellent (Like new, no scratches)</option>
+            <option value="good">Good (Minor wear and tear)</option>
+            <option value="fair">Fair (Visible scratches, fully functional)</option>
+            <option value="poor">Poor (Cracked screen or functional issues)</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-[#800020] uppercase tracking-wide">Repair History</label>
+          <select id="repair-history" class="w-full px-4 py-3 bg-white border border-[#C3E6CB] rounded-xl text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#800020] focus:border-transparent transition-all">
+            <option value="none">No previous repairs</option>
+            <option value="official">Repaired by Official/Authorized center</option>
+            <option value="third_party">Repaired by Third-party shop</option>
+            <option value="multiple">Multiple repairs</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="w-full mt-6 px-6 py-4 bg-[#800020] hover:bg-[#600018] text-white font-bold rounded-xl transition-colors shadow-md text-lg">
+        Calculate Estimate
+      </button>
+    </form>
+
+    <!-- Results Section (Hidden initially) -->
+    <div id="estimator-result" class="hidden mt-10 pt-8 border-t border-[#C3E6CB] text-center space-y-6 animate-in fade-in duration-500 relative z-10">
+      <h3 class="text-lg font-semibold text-[#9A2A2A] uppercase tracking-wider">Estimated Resale Value</h3>
+      <div class="text-5xl font-black text-[#800020] tracking-tight">
+        ₹<span id="est-low"></span> - ₹<span id="est-high"></span>
+      </div>
+      <p class="text-[#9A2A2A] max-w-lg mx-auto">Based on current market trends and the condition provided. Don't let your tech go to waste—list it for resale on our circular platform!</p>
+      
+      <div class="pt-4 flex justify-center gap-4">
+        <a href="/resale" class="px-6 py-3 bg-[#0277BD] hover:bg-[#025a8f] text-white font-bold rounded-xl transition-colors shadow-sm">
+          List for Resale
+        </a>
+        <button onclick="document.getElementById('estimator-form').reset(); document.getElementById('estimator-result').classList.add('hidden');" class="px-6 py-3 bg-white hover:bg-gray-50 border border-[#C3E6CB] text-[#800020] font-bold rounded-xl transition-colors shadow-sm">
+          Calculate Another
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('estimator-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Simple mock logic for estimation
+    const model = document.getElementById('product-model').value.length;
+    const age = parseInt(document.getElementById('device-age').value);
+    const condition = document.getElementById('device-condition').value;
+    const history = document.getElementById('repair-history').value;
+    
+    // Base value based on string length (just a fun mock scaled for INR)
+    let baseValue = 40000 + (model * 800);
+    
+    // Age depreciation
+    baseValue -= (age * 6500);
+    
+    // Condition multiplier
+    let conditionMult = 1.0;
+    if (condition === 'good') conditionMult = 0.8;
+    if (condition === 'fair') conditionMult = 0.5;
+    if (condition === 'poor') conditionMult = 0.25;
+    
+    // History penalty
+    let historyPenalty = 1.0;
+    if (history === 'official') historyPenalty = 0.95;
+    if (history === 'third_party') historyPenalty = 0.8;
+    if (history === 'multiple') historyPenalty = 0.7;
+    
+    let finalValue = baseValue * conditionMult * historyPenalty;
+    if (finalValue < 1500) finalValue = 1500;
+    
+    const low = Math.floor(finalValue * 0.9);
+    const high = Math.floor(finalValue * 1.15);
+    
+    // Formatting with commas for INR (e.g. 45,000)
+    document.getElementById('est-low').textContent = low.toLocaleString('en-IN');
+    document.getElementById('est-high').textContent = high.toLocaleString('en-IN');
+    
+    // Show results
+    document.getElementById('estimator-result').classList.remove('hidden');
+    
+    // Scroll to results
+    setTimeout(() => {
+      document.getElementById('estimator-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  });
+</script>
+{% endblock %}

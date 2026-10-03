@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-4xl">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-[#800020] mb-4">Maintenance Predictor</h1>
+    <p class="text-[#9A2A2A]">Based on your product's telemetry and history, ReTrace predicts and reminds you of upcoming maintenance to extend its lifespan.</p>
+  </div>
+
+  <div class="bg-[#EBF5EB] border border-[#C3E6CB] rounded-2xl p-6 sm:p-10 shadow-lg relative overflow-hidden">
+    
+    <div class="space-y-4">
+      
+      <!-- Alert 1 -->
+      <div class="flex items-center gap-4 bg-white rounded-xl p-5 border-l-4 border-amber-400 shadow-sm">
+        <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-500 flex-shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        </div>
+        <div class="flex-1">
+          <h4 class="font-bold text-amber-700 text-sm uppercase">Battery Check Due</h4>
+          <p class="text-xs text-gray-500 mt-1">MacBook Pro (RP-DL-72891) has reached 800 charge cycles. A routine health diagnostic is recommended.</p>
+        </div>
+        <button class="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold rounded-lg transition-colors whitespace-nowrap">Schedule</button>
+      </div>
+
+      <!-- Alert 2 -->
+      <div class="flex items-center gap-4 bg-white rounded-xl p-5 border-l-4 border-red-500 shadow-sm">
+        <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-500 flex-shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        </div>
+        <div class="flex-1">
+          <h4 class="font-bold text-red-700 text-sm uppercase">Maintenance Overdue</h4>
+          <p class="text-xs text-gray-500 mt-1">Thermal paste replacement for Workstation (RP-DT-9912) is 3 months overdue. Risk of overheating.</p>
+        </div>
+        <button class="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 text-xs font-bold rounded-lg transition-colors whitespace-nowrap">Fix Now</button>
+      </div>
+
+      <!-- Alert 3 -->
+      <div class="flex items-center gap-4 bg-white rounded-xl p-5 border-l-4 border-emerald-400 shadow-sm">
+        <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500 flex-shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        </div>
+        <div class="flex-1">
+          <h4 class="font-bold text-emerald-700 text-sm uppercase">Service Recommended</h4>
+          <p class="text-xs text-gray-500 mt-1">iPhone 13 Pro (RP-MB-48992) is due for a charging port cleaning in 15 days.</p>
+        </div>
+        <button class="px-4 py-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-xs font-bold rounded-lg transition-colors whitespace-nowrap">Dismiss</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

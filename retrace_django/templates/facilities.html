@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-16 font-sans select-none">
+  
+  <!-- Header -->
+  <div class="text-center space-y-4 max-w-3xl mx-auto">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-300">
+      <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+      <span>PLATFORM CAPABILITIES & PROTOCOL SUITE</span>
+    </div>
+
+    <h1 class="font-display font-extrabold text-4xl sm:text-5xl text-white tracking-tight">
+      ReTrace Facilities
+    </h1>
+
+    <p class="text-zinc-400 text-base leading-relaxed">
+      Comprehensive software capabilities powering the decentralized circular hardware economy — from cryptographic passports to AI diagnostics and material smelting coordination.
+    </p>
+  </div>
+
+  <!-- Facilities Interactive Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    
+    <!-- PRODUCT PASSPORT -->
+    <div class="p-6 sm:p-7 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col justify-between space-y-5 group">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">CORE LEDGER</span>
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-display font-bold text-lg sm:text-xl text-white group-hover:text-amber-400 transition-colors">PRODUCT PASSPORT</h3>
+          <p class="text-xs font-medium text-zinc-300">Digital Identity & Lifecycle History</p>
+        </div>
+        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">Provides every hardware device with an immutable cryptographic digital passport, preserving its serial number, technical specifications, and component bill of materials.</p>
+      </div>
+      <div class="pt-3 border-t border-zinc-800/80 flex items-center justify-between">
+        <a href="/products" class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors">
+          <span>Explore Passports</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <span class="text-[10px] font-mono text-zinc-500">OPERATIONAL ✓</span>
+      </div>
+    </div>
+
+    <!-- AI TECHNICAL ASSISTANT -->
+    <div class="p-6 sm:p-7 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col justify-between space-y-5 group">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.29 1.29L3 12l5.8 1.9a2 2 0 0 1 1.29 1.29L12 21l1.9-5.8a2 2 0 0 1 1.29-1.29L21 12l-5.8-1.9a2 2 0 0 1-1.29-1.29L12 3Z"/></svg>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">DIAGNOSTIC ENGINE</span>
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-display font-bold text-lg sm:text-xl text-white group-hover:text-amber-400 transition-colors">AI TECHNICAL ASSISTANT</h3>
+          <p class="text-xs font-medium text-zinc-300">Gemini-Powered Hardware Diagnostics</p>
+        </div>
+        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">Context-aware intelligence powered by Google Gemini 1.5 Flash. Pinpoints common low-risk hardware problems and provides safe step-by-step diagnostic actions.</p>
+      </div>
+      <div class="pt-3 border-t border-zinc-800/80 flex items-center justify-between">
+        <a href="/ai-assistant" class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors">
+          <span>Launch Assistant</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <span class="text-[10px] font-mono text-zinc-500">OPERATIONAL ✓</span>
+      </div>
+    </div>
+
+    <!-- REPAIR NETWORK -->
+    <div class="p-6 sm:p-7 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col justify-between space-y-5 group">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">SERVICE NETWORK</span>
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-display font-bold text-lg sm:text-xl text-white group-hover:text-amber-400 transition-colors">REPAIR NETWORK</h3>
+          <p class="text-xs font-medium text-zinc-300">Verified Independent Technicians</p>
+        </div>
+        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">Directory of certified local workshops equipped to service consumer electronics, ranked dynamically by audited repair volume and customer feedback.</p>
+      </div>
+      <div class="pt-3 border-t border-zinc-800/80 flex items-center justify-between">
+        <a href="/repairers" class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors">
+          <span>Find Repairers</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <span class="text-[10px] font-mono text-zinc-500">OPERATIONAL ✓</span>
+      </div>
+    </div>
+
+    <!-- REPAIR HISTORY -->
+    <div class="p-6 sm:p-7 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col justify-between space-y-5 group">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">VERIFIED PROVENANCE</span>
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-display font-bold text-lg sm:text-xl text-white group-hover:text-amber-400 transition-colors">REPAIR HISTORY</h3>
+          <p class="text-xs font-medium text-zinc-300">Tamper-Evident Maintenance Records</p>
+        </div>
+        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">Logs verified part replacements, thermal servicing, and board rework. Every work order is cryptographically signed by authorized technicians.</p>
+      </div>
+      <div class="pt-3 border-t border-zinc-800/80 flex items-center justify-between">
+        <a href="/dashboard" class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors">
+          <span>View Work Orders</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <span class="text-[10px] font-mono text-zinc-500">OPERATIONAL ✓</span>
+      </div>
+    </div>
+
+    <!-- RESALE -->
+    <div class="p-6 sm:p-7 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col justify-between space-y-5 group">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">CIRCULAR MARKET</span>
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-display font-bold text-lg sm:text-xl text-white group-hover:text-amber-400 transition-colors">RESALE</h3>
+          <p class="text-xs font-medium text-zinc-300">Circular Second-Life Valuation & Listings</p>
+        </div>
+        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">Dynamic depreciation calculators and transparent marketplace listings backed by verified battery health and audited repair history.</p>
+      </div>
+      <div class="pt-3 border-t border-zinc-800/80 flex items-center justify-between">
+        <a href="/resale" class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors">
+          <span>Open Resale Market</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <span class="text-[10px] font-mono text-zinc-500">OPERATIONAL ✓</span>
+      </div>
+    </div>
+
+    <!-- RECOVERY -->
+    <div class="p-6 sm:p-7 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col justify-between space-y-5 group">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15.3 3.4 9 12 3.3z"/><path d="M13.8 21.4 7 15.3l8.6-5.7z"/><path d="M20.6 9 13.8 21.4l-5.2-12.1z"/></svg>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">ZERO LANDFILL</span>
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-display font-bold text-lg sm:text-xl text-white group-hover:text-amber-400 transition-colors">RECOVERY</h3>
+          <p class="text-xs font-medium text-zinc-300">Component Harvesting & Materials Smelting</p>
+        </div>
+        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">Connects irreparable devices directly to verified hydrometallurgical refineries and component harvesters to prevent e-waste from entering landfills.</p>
+      </div>
+      <div class="pt-3 border-t border-zinc-800/80 flex items-center justify-between">
+        <a href="/recovery" class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors">
+          <span>Access Recovery</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <span class="text-[10px] font-mono text-zinc-500">OPERATIONAL ✓</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Protocol Summary Card -->
+  <div class="rounded-2xl p-8 bg-zinc-950 border border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+    <div class="space-y-1.5 max-w-xl">
+      <div class="flex items-center justify-center sm:justify-start gap-2 text-xs font-mono text-emerald-400">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>DPP ISO 14040 & EU ESPR STANDARDS</span>
+      </div>
+      <h3 class="font-display font-bold text-xl text-white">
+        Need custom enterprise or fleet integration?
+      </h3>
+      <p class="text-xs text-zinc-400 leading-relaxed">
+        Integrate ReTrace API capabilities into OEM warranty portals, municipal repair hubs, or recycling networks.
+      </p>
+    </div>
+    <a href="/contact" class="px-5 py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs transition-colors shrink-0">
+      Contact Protocol Team
+    </a>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+# =============================================================================
+# DOCKER IGNORE - RETRACE PROTOCOL
+# Prevents local dependencies, build artifacts, and secrets from being copied
+# =============================================================================
+
+# Dependency and build directories
+node_modules
+dist
+dist-server
+.tmp
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Git repository files
+.git
+.gitignore
+.gitattributes
+
+# Environment files and local secrets (CRITICAL: Never bake into Docker images)
+.env
+.env.local
+.env.*.local
+*.env
+*.pem
+*.key
+
+# Docker & Container configs
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# IDE & OS files
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Agent, logs & scratch directories
+.gemini
+*.log
+scratch/

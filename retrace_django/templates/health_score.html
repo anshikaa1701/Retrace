@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-4xl">
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-[#800020] mb-4">Product Health Score</h1>
+    <p class="text-[#9A2A2A]">Enter your Product ID (e.g., RP-DL-72891) to instantly view its overall health, battery status, repair history, and age at a single glance.</p>
+  </div>
+
+  <div class="bg-[#EBF5EB] border border-[#C3E6CB] rounded-2xl p-6 sm:p-10 shadow-lg relative overflow-hidden">
+    <form id="health-score-form" class="relative z-10 space-y-6">
+      
+      <div class="space-y-2">
+        <label class="text-sm font-semibold text-[#800020] uppercase tracking-wide">Enter Product ID</label>
+        <div class="flex gap-4">
+          <input type="text" id="product-id" required placeholder="e.g. RP-DL-72891" class="flex-1 px-4 py-3 bg-white border border-[#C3E6CB] rounded-xl text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#800020] focus:border-transparent transition-all uppercase" />
+          <button type="submit" class="px-8 py-3 bg-[#800020] hover:bg-[#600018] text-white font-bold rounded-xl transition-colors shadow-md whitespace-nowrap">
+            Check Health
+          </button>
+        </div>
+      </div>
+      
+      <!-- Quick Demo Buttons -->
+      <div class="flex gap-2 pt-2 overflow-x-auto pb-2">
+        <span class="text-xs text-[#9A2A2A] font-semibold flex items-center mr-2">Try:</span>
+        <button type="button" onclick="document.getElementById('product-id').value='RP-DL-72891'; document.getElementById('health-score-form').dispatchEvent(new Event('submit'));" class="px-3 py-1 bg-white border border-[#C3E6CB] text-xs font-mono rounded-lg hover:bg-[#C3E6CB] hover:text-[#800020] transition-colors">RP-DL-72891</button>
+        <button type="button" onclick="document.getElementById('product-id').value='RP-MB-48992'; document.getElementById('health-score-form').dispatchEvent(new Event('submit'));" class="px-3 py-1 bg-white border border-[#C3E6CB] text-xs font-mono rounded-lg hover:bg-[#C3E6CB] hover:text-[#800020] transition-colors">RP-MB-48992</button>
+      </div>
+    </form>
+
+    <!-- Loading State -->
+    <div id="health-loading" class="hidden mt-8 text-center space-y-4 animate-pulse relative z-10">
+      <div class="w-10 h-10 border-4 border-[#800020] border-t-transparent rounded-full animate-spin mx-auto"></div>
+      <p class="text-[#800020] font-medium tracking-wide text-sm">Fetching product telemetry...</p>
+    </div>
+
+    <!-- Results Section (Hidden initially) -->
+    <div id="health-result" class="hidden mt-10 pt-8 border-t border-[#C3E6CB] space-y-8 animate-in slide-in-from-bottom-4 duration-500 relative z-10">
+      
+      <div class="text-center space-y-2">
+        <h2 class="text-xl font-bold text-[#800020]" id="display-model">MacBook Pro M2 (2023)</h2>
+        <p class="text-sm font-mono text-[#9A2A2A]">ID: <span id="display-id">RP-DL-72891</span></p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        
+        <!-- Health Score -->
+        <div class="col-span-2 md:col-span-1 bg-white rounded-xl p-5 border border-[#C3E6CB] flex flex-col items-center justify-center space-y-3">
+          <span class="text-xs font-bold text-gray-500 uppercase tracking-widest text-center">Health</span>
+          <div class="relative w-20 h-20 flex items-center justify-center rounded-full border-4" id="health-ring">
+            <span class="text-2xl font-black text-[#800020]" id="score-val">78</span>
+          </div>
+          <span class="text-[10px] text-gray-400">out of 100</span>
+        </div>
+        
+        <!-- Battery -->
+        <div class="bg-white rounded-xl p-5 border border-[#C3E6CB] flex flex-col justify-between">
+          <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Battery</span>
+          <div class="space-y-1">
+            <span class="text-2xl font-black text-[#800020]" id="battery-status">Good</span>
+            <p class="text-xs text-gray-400"><span id="battery-cycles">312</span> cycles</p>
+          </div>
+        </div>
+
+        <!-- Repairs -->
+        <div class="bg-white rounded-xl p-5 border border-[#C3E6CB] flex flex-col justify-between">
+          <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Repairs</span>
+          <div class="space-y-1">
+            <span class="text-2xl font-black text-[#800020]" id="repair-count">2</span>
+            <p class="text-xs text-gray-400">Total events</p>
+          </div>
+        </div>
+
+        <!-- Age -->
+        <div class="bg-white rounded-xl p-5 border border-[#C3E6CB] flex flex-col justify-between">
+          <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Age</span>
+          <div class="space-y-1">
+            <span class="text-2xl font-black text-[#800020]"><span id="age-val">2.5</span><span class="text-lg">y</span></span>
+            <p class="text-xs text-gray-400">Since activation</p>
+          </div>
+        </div>
+        
+      </div>
+      
+      <div class="pt-2 flex justify-center gap-4">
+        <a id="passport-link" href="#" class="px-6 py-2.5 bg-[#800020] hover:bg-[#600018] text-white text-sm font-bold rounded-lg transition-colors shadow-sm">
+          View Full Digital Passport
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('health-score-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const pid = document.getElementById('product-id').value.toUpperCase();
+    
+    // UI states
+    document.getElementById('health-result').classList.add('hidden');
+    document.getElementById('health-loading').classList.remove('hidden');
+    
+    // Simulate API fetch delay
+    setTimeout(() => {
+      let score = 78;
+      let battery = "Good";
+      let cycles = 345;
+      let repairs = 2;
+      let age = 2.5;
+      let model = "Generic Device";
+      let ringColor = "border-amber-400"; // Medium score color
+      
+      if (pid === 'RP-DL-72891' || pid.includes('DL')) {
+        model = "MacBook Pro M2 (2023)";
+        score = 92;
+        battery = "Excellent";
+        cycles = 120;
+        repairs = 0;
+        age = 1.2;
+        ringColor = "border-green-500";
+      } else if (pid === 'RP-MB-48992' || pid.includes('MB')) {
+        model = "iPhone 13 Pro (128GB)";
+        score = 65;
+        battery = "Service";
+        cycles = 950;
+        repairs = 3;
+        age = 3.5;
+        ringColor = "border-red-400";
+      } else {
+        // Dynamic generation based on string
+        model = "Unknown Device Model";
+        score = Math.max(40, 100 - (pid.length * 5));
+        repairs = pid.length % 4;
+        age = (pid.length % 6) + 1.5;
+        cycles = Math.floor(age * 300);
+        
+        if (score >= 85) { battery = "Excellent"; ringColor = "border-green-500"; }
+        else if (score >= 70) { battery = "Good"; ringColor = "border-amber-400"; }
+        else { battery = "Service"; ringColor = "border-red-400"; }
+      }
+      
+      // Update DOM elements
+      document.getElementById('display-id').textContent = pid;
+      document.getElementById('display-model').textContent = model;
+      document.getElementById('score-val').textContent = score;
+      document.getElementById('battery-status').textContent = battery;
+      document.getElementById('battery-cycles').textContent = cycles;
+      document.getElementById('repair-count').textContent = repairs;
+      document.getElementById('age-val').textContent = age;
+      
+      // Update ring color
+      const ring = document.getElementById('health-ring');
+      ring.className = `relative w-20 h-20 flex items-center justify-center rounded-full border-4 ${ringColor}`;
+      
+      document.getElementById('passport-link').href = `/passport/${pid}`;
+      
+      // Toggle visibility
+      document.getElementById('health-loading').classList.add('hidden');
+      document.getElementById('health-result').classList.remove('hidden');
+    }, 800);
+  });
+</script>
+{% endblock %}

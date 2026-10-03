@@ -1,0 +1,520 @@
+{% load static %}
+<!doctype html>
+<html lang="en" class="dark scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpeg" href="{% static 'retrace-logo.jpg' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#080808" />
+    <title>RETRACE — Give Every Product a Next Path</title>
+    <meta name="description" content="RETRACE gives physical products a digital identity and lifecycle passport. When a product develops a problem, RETRACE helps determine its next useful path: Repair, Resell, Recover, Recycle." />
+    
+    <!-- Google Fonts: Space Grotesk, Inter, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Global CSS (Compiled Tailwind from original project) -->
+    <link rel="stylesheet" href="{% static 'assets/index-teAtjWWn.css' %}">
+    
+    <!-- Pastel Theme Overrides -->
+    <style>
+      /* Global Background: Butter Yellow */
+      body, .min-h-screen, .bg-\[\#09090b\], .bg-\[\#080808\], .bg-gradient-to-b {
+        background-color: #FFF9E6 !important;
+        background-image: none !important;
+        color: #1E293B !important;
+      }
+      
+      /* All Grey Backgrounds & Panels: Pastel Green */
+      .bg-zinc-950, .bg-zinc-900, .bg-zinc-800, .bg-zinc-700, .bg-zinc-600, .bg-black,
+      .bg-zinc-950\/90, .bg-zinc-950\/80, .bg-zinc-950\/60, .bg-zinc-950\/40,
+      .bg-zinc-900\/90, .bg-zinc-900\/80, .bg-zinc-900\/60, .bg-zinc-900\/50, .bg-zinc-900\/40,
+      .bg-zinc-800\/90, .bg-zinc-800\/80, .bg-zinc-800\/60, .bg-zinc-800\/50, .bg-zinc-800\/40,
+      .bg-zinc-700\/90, .bg-zinc-700\/80, .bg-zinc-700\/60, .bg-zinc-700\/50, .bg-zinc-700\/40 {
+        background-color: #EBF5EB !important; /* Soft Pastel Green */
+        border-color: #C3E6CB !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+      }
+      
+      /* Hover States for Grey Backgrounds */
+      .hover\:bg-zinc-900:hover, .hover\:bg-zinc-800:hover, .hover\:bg-zinc-700:hover, 
+      .hover\:bg-zinc-800\/80:hover, .hover\:bg-zinc-700\/80:hover {
+        background-color: #D4EDDA !important; /* Slightly darker Pastel Green on hover */
+      }
+      
+      /* Text Colors (Burgundy to contrast with Pastels & Butter Yellow) */
+      .text-zinc-100, .text-white, .text-zinc-200, .text-zinc-50 {
+        color: #800020 !important; /* Deep Burgundy */
+      }
+      .text-zinc-400, .text-zinc-500, .text-zinc-300, .text-zinc-600 {
+        color: #9A2A2A !important; /* Lighter Burgundy/Red-Brown */
+      }
+      
+      /* Primary Buttons (formerly amber) */
+      .bg-amber-400, .bg-amber-500 {
+        background-color: #800020 !important; /* Deep Burgundy */
+        color: #FFFFFF !important;
+        border: none !important;
+      }
+      .hover\:bg-amber-300:hover {
+        background-color: #600018 !important; /* Darker Burgundy on hover */
+      }
+      
+      /* Accent Text (formerly amber) */
+      .text-amber-400, .text-amber-500, .text-amber-300 {
+        color: #800020 !important; /* Deep Burgundy */
+      }
+      .bg-amber-400\/10 {
+        background-color: rgba(128, 0, 32, 0.1) !important;
+      }
+      .border-amber-400\/20, .border-amber-400\/30, .border-amber-400\/40 {
+        border-color: #800020 !important;
+      }
+      
+      /* Borders */
+      .border-zinc-800, .border-zinc-700, .border-zinc-600, .divide-zinc-800\/80 > :not([hidden]) ~ :not([hidden]), .border-zinc-900 {
+        border-color: #C3E6CB !important;
+      }
+      
+      /* Emerald / Teal Accents */
+      .text-emerald-400, .text-emerald-500, .text-cyan-400 {
+        color: #0277BD !important; /* Medium Blue */
+      }
+      .bg-emerald-500\/10, .bg-cyan-400\/10 {
+        background-color: rgba(2, 119, 189, 0.1) !important;
+      }
+      .border-emerald-500\/20, .border-emerald-500\/30, .border-cyan-400\/40 {
+        border-color: rgba(2, 119, 189, 0.3) !important;
+      }
+      
+      /* Inputs */
+      input, textarea, select, option {
+        background-color: #FFFFFF !important;
+        border-color: #C3E6CB !important;
+        color: #0F172A !important;
+      }
+      input::placeholder, textarea::placeholder {
+        color: #94A3B8 !important;
+      }
+    </style>
+    
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body class="bg-[#080808] text-[#F5F5F5] font-sans antialiased selection:bg-emerald-500/20 selection:text-emerald-300 min-h-screen relative overflow-x-hidden flex flex-col">
+    
+    <!-- Complex JS backgrounds and HUDs will be injected here via blocks or included components -->
+    {% block backgrounds %}{% endblock %}
+
+    <!-- Navbar & Slidebar -->
+    {% block navbar %}
+      <header class="fixed top-0 z-50 w-full border-b shadow-sm" style="background-color: #EBF5EB; border-color: #C3E6CB;">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+          <!-- Logo & Name -->
+          <div class="flex items-center gap-3">
+            <button id="mobile-menu-btn" class="p-2 mr-2 focus:outline-none" style="color: #1E293B;" aria-label="Toggle Slidebar" onmouseover="this.style.color='#800020'" onmouseout="this.style.color='#1E293B'">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <a href="/" class="flex items-center gap-2 group">
+              <img src="{% static 'retrace-logo.jpg' %}" alt="ReTrace Logo" class="h-10 w-10 rounded-full object-cover border-2 transition-colors" style="border-color: rgba(2, 119, 189, 0.3);" />
+              <span class="text-xl font-bold tracking-tight" style="color: #800020;">RETRACE</span>
+            </a>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <nav class="hidden lg:flex items-center gap-6">
+            <a href="/" class="text-sm font-medium transition-colors" style="color: #1E293B;" onmouseover="this.style.color='#800020'" onmouseout="this.style.color='#1E293B'">Home</a>
+            <a href="/dashboard" class="text-sm font-medium transition-colors" style="color: #1E293B;" onmouseover="this.style.color='#800020'" onmouseout="this.style.color='#1E293B'">Dashboard</a>
+          </nav>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-6">
+            {% if request.user.is_authenticated %}
+              <div class="hidden sm:flex items-center gap-4">
+                <span class="text-sm font-semibold" style="color: #800020;">Hi, {{ request.user.username|default:"User" }}</span>
+                <a href="/logout" class="text-sm font-medium transition-colors hover:-translate-y-0.5" style="color: #1E293B;" onmouseover="this.style.color='#800020'" onmouseout="this.style.color='#1E293B'">Logout</a>
+              </div>
+            {% else %}
+              <a href="/login" class="hidden sm:inline-flex text-sm font-medium transition-colors hover:-translate-y-0.5" style="color: #1E293B;" onmouseover="this.style.color='#800020'" onmouseout="this.style.color='#1E293B'">Sign In</a>
+              <a href="/login" class="hidden sm:inline-flex text-sm font-medium transition-colors hover:-translate-y-0.5" style="color: #1E293B;" onmouseover="this.style.color='#800020'" onmouseout="this.style.color='#1E293B'">Login</a>
+            {% endif %}
+            <a href="/products/new" class="hidden sm:inline-flex text-sm font-bold transition-all hover:-translate-y-1 shadow-md hover:shadow-lg px-5 py-2.5 rounded-xl" style="background-color: #800020; color: #FFFFFF !important;">Register Device</a>
+          </div>
+        </div>
+      </header>
+
+      <!-- Slidebar (Drawer) -->
+      <div id="slidebar-overlay" class="fixed left-0 right-0 bottom-0 z-40 transition-opacity duration-300" style="top: 4rem; background-color: rgba(0,0,0,0.5); opacity: 0; pointer-events: none;"></div>
+      <div id="slidebar" class="fixed left-0 bottom-0 z-40 w-64 border-r shadow-2xl transition-transform duration-300 flex flex-col" style="top: 4rem; background-color: #EBF5EB; border-color: #C3E6CB; transform: translateX(-100%);">
+        <div class="h-16 flex items-center justify-between px-4 border-b" style="border-color: #C3E6CB;">
+          <span class="text-lg font-bold" style="color: #800020;">All Features</span>
+          <button id="close-slidebar-btn" class="p-2 focus:outline-none rounded-md" style="color: #1E293B;" onmouseover="this.style.color='#800020'" onmouseout="this.style.color='#1E293B'">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+        <div class="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-1" id="slidebar-links">
+          <!-- Feature Links -->
+          <a href="/dashboard" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            Dashboard
+          </a>
+          <a href="/products/new" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Register Device
+          </a>
+          <a href="/scan" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path></svg>
+            Scan Passport
+          </a>
+          <a href="/repairers" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            Find Repairers
+          </a>
+          <a href="/resale" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Resale Market
+          </a>
+          <a href="/recovery" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            Recovery & Recycling
+          </a>
+          <a href="/lifecycle-dashboard" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            Lifecycle Dashboard
+          </a>
+          <a href="/ewaste-tracker" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            E-Waste Tracker
+          </a>
+          <a href="/maintenance-predictor" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            Maintenance Predictor
+          </a>
+          <a href="/second-life" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            Second-Life Recommender
+          </a>
+          <a href="/repair-vs-resell" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
+            Repair vs Resell Comparison
+          </a>
+          <a href="/clean-recycle" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Clean Before Recycle
+          </a>
+          <a href="/health-score" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+            Product Health Score
+          </a>
+          <a href="/repair-estimator" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            Repair Estimator
+          </a>
+          <a href="/estimator" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Resale Estimator
+          </a>
+          <a href="/ai-assistant" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+            <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            AI Assistant
+          </a>
+          <div class="my-4 border-t" style="border-color: #C3E6CB;"></div>
+          {% if request.user.is_authenticated %}
+            <a href="/profile" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3 sm:hidden" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+              <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+              My Profile
+            </a>
+            <a href="/logout" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3 sm:hidden" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+              <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+              Logout
+            </a>
+          {% else %}
+            <a href="/login" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3 sm:hidden" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+              <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+              Sign In / Login
+            </a>
+            <a href="/register" class="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-3 sm:hidden" style="color: #800020;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.5)'" onmouseout="this.style.backgroundColor='transparent'">
+              <svg class="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+              Register Account
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+          const closeSlidebarBtn = document.getElementById('close-slidebar-btn');
+          const slidebar = document.getElementById('slidebar');
+          const overlay = document.getElementById('slidebar-overlay');
+          
+          function toggleSlidebar() {
+            const isClosed = slidebar.style.transform === 'translateX(-100%)';
+            if (isClosed) {
+              slidebar.style.transform = 'translateX(0)';
+              overlay.style.pointerEvents = 'auto';
+              setTimeout(() => {
+                overlay.style.opacity = '1';
+              }, 10);
+            } else {
+              slidebar.style.transform = 'translateX(-100%)';
+              overlay.style.opacity = '0';
+              setTimeout(() => {
+                overlay.style.pointerEvents = 'none';
+              }, 300);
+            }
+          }
+          
+          if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleSlidebar);
+          if (closeSlidebarBtn) closeSlidebarBtn.addEventListener('click', toggleSlidebar);
+          if (overlay) overlay.addEventListener('click', toggleSlidebar);
+        });
+      </script>
+    {% endblock %}
+
+    <!-- Main View Router Equivalent -->
+    <main class="flex-grow relative z-10 w-full" style="padding-top: 4rem; padding-bottom: 4rem;">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Dynamic Footer -->
+    {% block footer %}
+      <footer class="mt-32 pt-16 pb-8 relative w-full shrink-0 overflow-hidden" style="background: linear-gradient(180deg, transparent 0%, #EBF5EB 100%);">
+        
+        <!-- Decorative Background Wave/Circle -->
+        <div class="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[800px] h-[800px] rounded-full opacity-30 blur-3xl pointer-events-none" style="background: radial-gradient(circle, #C3E6CB 0%, transparent 70%); z-index: -1;"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+          
+          <!-- Main Links Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 mb-16">
+            
+            <div class="lg:col-span-2">
+              <a href="/" class="flex items-center gap-3 mb-5 group w-fit">
+                <img src="{% static 'retrace-logo.jpg' %}" alt="ReTrace Logo" class="h-10 w-10 rounded-full object-cover border-2 shadow-sm transition-transform duration-500 group-hover:rotate-[360deg]" style="border-color: rgba(2, 119, 189, 0.3);" />
+                <span class="text-2xl font-extrabold tracking-tight" style="color: #800020;">RETRACE</span>
+              </a>
+              <p class="text-sm leading-relaxed max-w-sm mb-6" style="color: #9A2A2A;">
+                Giving physical products a permanent digital identity and lifecycle passport to ensure nothing goes to waste. The protocol for hardware truth.
+              </p>
+              <div class="flex gap-4">
+                <a href="#" class="p-2 rounded-full transition-all hover:-translate-y-1 hover:shadow-md" style="background-color: white; color: #800020;" title="Twitter">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                </a>
+                <a href="#" class="p-2 rounded-full transition-all hover:-translate-y-1 hover:shadow-md" style="background-color: white; color: #800020;" title="LinkedIn">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <a href="#" class="p-2 rounded-full transition-all hover:-translate-y-1 hover:shadow-md" style="background-color: white; color: #800020;" title="GitHub">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                </a>
+              </div>
+            </div>
+            
+            <div class="lg:col-span-1">
+              <h4 class="font-bold mb-5 tracking-wide text-sm uppercase" style="color: #800020;">Platform</h4>
+              <ul class="space-y-3 text-sm font-medium" style="color: #9A2A2A;">
+                <li><a href="/dashboard" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">Dashboard</a></li>
+                <li><a href="/products/new" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">Register Device</a></li>
+                <li><a href="/scan" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">Scan Passport</a></li>
+                <li><a href="/lifecycle-dashboard" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">Lifecycle Flow</a></li>
+              </ul>
+            </div>
+            
+            <div class="lg:col-span-1">
+              <h4 class="font-bold mb-5 tracking-wide text-sm uppercase" style="color: #800020;">Features</h4>
+              <ul class="space-y-3 text-sm font-medium" style="color: #9A2A2A;">
+                <li><a href="/repairers" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">Find Repairers</a></li>
+                <li><a href="/resale" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">Resale Market</a></li>
+                <li><a href="/recovery" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">Recovery Options</a></li>
+                <li><a href="/ai-assistant" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">AI Diagnostic</a></li>
+              </ul>
+            </div>
+            
+            <div class="lg:col-span-1">
+              <h4 class="font-bold mb-5 tracking-wide text-sm uppercase" style="color: #800020;">Company</h4>
+              <ul class="space-y-3 text-sm font-medium" style="color: #9A2A2A;">
+                <li><a href="/about" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">About Us</a></li>
+                <li><a href="/contact" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">Contact Support</a></li>
+                <li><a href="/terms" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">Terms of Service</a></li>
+                <li><a href="/privacy" class="transition-all hover:text-[#800020] hover:translate-x-1 inline-block">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono" style="border-color: rgba(195, 230, 203, 0.5); color: #9A2A2A;">
+            <p>&copy; 2026 RETRACE INTELLIGENCE. VERIFIED ON CHAIN.</p>
+            <div class="flex gap-6 font-semibold">
+              <a href="#" class="transition-colors hover:text-[#800020]">STATUS</a>
+              <a href="#" class="transition-colors hover:text-[#800020]">SECURITY</a>
+              <a href="#" class="transition-colors hover:text-[#800020]">DEVELOPERS</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    {% endblock %}
+
+    {% block extra_scripts %}
+    <style>
+      /* Page Transition */
+      body {
+        opacity: 1;
+        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      body.page-transitioning {
+        opacity: 0;
+      }
+
+      /* Global Animation & Interaction Styles */
+      @media (prefers-reduced-motion: no-preference) {
+        .scroll-reveal {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+          will-change: opacity, transform;
+        }
+        .scroll-reveal.is-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        /* Staggered Children for Grids/Lists */
+        .stagger-container.is-visible > * {
+          opacity: 0;
+          animation: staggerFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .stagger-container.is-visible > *:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-container.is-visible > *:nth-child(2) { animation-delay: 0.2s; }
+        .stagger-container.is-visible > *:nth-child(3) { animation-delay: 0.3s; }
+        .stagger-container.is-visible > *:nth-child(4) { animation-delay: 0.4s; }
+        .stagger-container.is-visible > *:nth-child(5) { animation-delay: 0.5s; }
+        
+        @keyframes staggerFadeUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Icon subtle motion on hover */
+        .group:hover svg.opacity-70 {
+          transform: scale(1.1);
+          opacity: 1;
+          transition: all 0.3s ease;
+        }
+      }
+
+      /* Global Smooth Transitions */
+      a, button, input, select, textarea, .rounded-xl, .rounded-2xl, .rounded-lg, .shadow-lg, .shadow-xl {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      /* Active Tap Feedback for User Friendliness */
+      button:active, a:active {
+        transform: scale(0.97) !important;
+      }
+
+      /* Button Loading State */
+      .btn-loading {
+        position: relative;
+        pointer-events: none;
+        color: transparent !important;
+      }
+      .btn-loading::after {
+        content: "";
+        position: absolute;
+        width: 1rem;
+        height: 1rem;
+        top: calc(50% - 0.5rem);
+        left: calc(50% - 0.5rem);
+        border: 2px solid rgba(255,255,255,0.5);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* Universal Card Hover Elevations (Excludes navs, inputs, chat bubbles, buttons) */
+      main .rounded-xl:not(button):not(input):not(.max-w-2xl):hover, 
+      main .rounded-2xl:not(button):not(input):not(.max-w-2xl):hover, 
+      main .shadow-lg:not(button):not(input):not(.max-w-2xl):hover, 
+      main .shadow-xl:not(button):not(input):not(.max-w-2xl):hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(128, 0, 32, 0.15), 0 10px 10px -5px rgba(128, 0, 32, 0.05) !important;
+        border-color: rgba(128, 0, 32, 0.2) !important;
+      }
+
+      /* Universal Input Focus Enhancements */
+      input:focus, textarea:focus, select:focus {
+        outline: none !important;
+        border-color: #800020 !important;
+        box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.15) !important;
+      }
+      
+      /* Input Validation Feedback */
+      input:not(:placeholder-shown):valid {
+        border-color: #10B981 !important;
+      }
+    </style>
+
+    <script>
+      // Execute immediately at the end of body to prevent FOUC
+      (function() {
+        // Reduced Motion Check
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // --- Page Transitions ---
+        if (!prefersReducedMotion) {
+          document.querySelectorAll('a[href^="/"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+              // Ignore links that open in new tabs, or anchor links
+              if (this.target === '_blank' || this.getAttribute('href').startsWith('#') || e.ctrlKey || e.metaKey) return;
+              e.preventDefault();
+              const target = this.href;
+              document.body.classList.add('page-transitioning');
+              setTimeout(() => {
+                window.location.href = target;
+              }, 300); // matches CSS transition time
+            });
+          });
+        }
+
+        // --- Scroll Reveal ---
+        if (!prefersReducedMotion) {
+          const elementsToAnimate = document.querySelectorAll('main section, main .grid > div, main > .container > div');
+          
+          elementsToAnimate.forEach(el => {
+            if (!el.classList.contains('scroll-reveal') && !el.closest('.no-reveal')) {
+              el.classList.add('scroll-reveal');
+            }
+          });
+
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { 
+            root: null,
+            rootMargin: '0px 0px -50px 0px', 
+            threshold: 0.05
+          });
+
+          document.querySelectorAll('.scroll-reveal, .stagger-container').forEach(el => observer.observe(el));
+        }
+
+        // --- Button Interaction (Loading State) ---
+        document.querySelectorAll('button[type="submit"], form button').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            // Only if form is valid or it's a generic action button
+            const form = this.closest('form');
+            if (!form || form.checkValidity()) {
+              this.classList.add('btn-loading');
+              // Remove after 3 seconds as a fallback in case page doesn't reload
+              setTimeout(() => this.classList.remove('btn-loading'), 3000);
+            }
+          });
+        });
+      })();
+    </script>
+    {% endblock %}
+  </body>
+</html>
